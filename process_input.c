@@ -120,47 +120,50 @@ void split_input(char *input, char *args[])
  * Return: void
  */
 
-void forking(char *input, char *args[], char *cmd, char *path)
+void forking(char *args[], char *cmd, char *path)
 {
 	pid_t fork_result;
 	char *path_temp, *directory, *full_path = NULL;
 	int status;
 
-	fork_result = fork(); /*gives a pid*/
-	if (fork_result == -1) /*error*/
+	path_temp = strdup(path);
+	directory = strtok(path_temp, ":");
+
+	while (directory != NULL)
 	{
-		perror("Fork failed");
-		exit(EXIT_FAILURE);
-	} /*fail*/
-	else if (fork_result == 0) /*success -> child process*/
-	{
-		path_temp = strdup(path); /*where does path come from?*/
-		directory = strtok(path_temp, ":"); /*full_path = NULL;*/
-		while (directory != NULL)
+		full_path = malloc(strlen(directory) + strlen(cmd) + 2);
+		sprintf(full_path, "%s/%s", directory, cmd);
+		if (access(full_path, X_OK) == 0)
+			break;
+		else
 		{
-			full_path = malloc(strlen(directory) + strlen(input) + 2);
-			sprintf(full_path, "%s/%s", directory, cmd);
-			if (access(full_path, X_OK) == 0)
-			{
-				break;
-			}
-			else
-			{
-				free(full_path);
-				full_path = NULL;
-			}
-			directory = strtok(NULL, ":");
-		} /*while*/
-		if (full_path == NULL)
-		{ /*cmd not found in path*/
-			perror("Command not found in PATH");
-			exit(EXIT_FAILURE);
+			free(full_path);
+			full_path = NULL;
 		}
-		execve(full_path, args, NULL); /*exe cmd*/
-		perror("execve failed"); /*if exe fails*/
-		exit(EXIT_FAILURE);
-	} /*child*/
-	else /*parent*/
-		wait(&status);
+		directory = strtok(NULL, ":");
+	}
+	if (full_path != NULL)
+	{
+		fork_result = fork(); /*gives a pid*/
+		if (fork_result == -1) /*error*/
+		{
+			perror("Fork failed");
+			exit(EXIT_FAILURE);
+		} /*fail*/
+		else if (fork_result == 0) /*success -> child process*/
+		{
+			execve(full_path, args, NULL); /*exe cmd*/
+			perror("execve failed"); /*if exe fails*/
+			exit(EXIT_FAILURE);
+		} /*child*/
+		else /*parent*/
+			wait(&status);
+	}
+	else
+	{ /*path == NULL*/
+		perror("Command not found in PATH");
+	}
+	free(path_temp);
+	free(full_path);	
 } /*forking*/
 

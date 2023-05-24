@@ -16,7 +16,7 @@
 void get_input(char **input);
 void get_input2(char **input);
 void split_input(char *input, char *args[]);
-void forking(char *input, char *args[], char *cmd, char *path);
+void forking(char *args[], char *cmd, char *path);
 
 /*file: handle_bi.c*/
 int handle_builtins(char *args[], char **environ);

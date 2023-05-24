@@ -49,7 +49,7 @@ int main(int argc __attribute__((unused)),
 		check = handle_builtins(args, environ); /*handle builtins*/
 		if (check == 1)
 			continue; /*env builtin or cd -> restart loop*/
-		forking(input, args, cmd, path); /*fork and exe child process*/
+		forking(args, cmd, path); /*fork and exe child process*/
 	} /*show prompt*/
 	free(input);
 	return (0);
