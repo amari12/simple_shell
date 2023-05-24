@@ -21,7 +21,7 @@ int main(int argc __attribute__((unused)),
 	int exit_loop = 0;
 	char *path; /*, *temp;*/
 	int check; /*for builtin, check for env*/
-	char **environ = __environ; /*global variable*/
+	/*char **environ = __environ;*/ /*global variable*/
 
 	path = getenv("PATH"); /*get path*/
 	while (exit_loop != 1) /*shell loop*/

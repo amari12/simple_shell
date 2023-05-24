@@ -12,6 +12,8 @@
 #define SIZE 1024
 #define ARGS_SIZE 50
 
+extern char **environ;
+
 /*file: process_input2.c*/
 void get_input(char **input);
 void get_input2(char **input);
