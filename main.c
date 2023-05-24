@@ -14,10 +14,7 @@
 int main(int argc __attribute__((unused)),
 		char *argv[] __attribute__((unused)))
 {
-	/*char input[SIZE];*/
 	char *input = NULL;
-	/*int i;*/
-	/*char newline = '\n';*/
 	char *exit_msg = "EOF\n...\n";
 	char *cmd;
 	char *args[ARGS_SIZE];
@@ -25,11 +22,8 @@ int main(int argc __attribute__((unused)),
 	char *path; /*, *temp;*/
 	int check; /*for builtin, check for env*/
 	char **environ = __environ; /*global variable*/
-	/*char *directory;*/
 
 	path = getenv("PATH"); /*get path*/
-	/*temp = strdup(path);*/
-	/*directory = strtok(temp, ";");*/ /*initialise dir*/
 	while (exit_loop != 1) /*shell loop*/
 	{
 		printf("our shell>> "); /*prompt*/

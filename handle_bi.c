@@ -9,11 +9,8 @@
 
 int handle_builtins(char *args[], char **environ)
 {
-	/*extern char **environ;*/
-	char **env;
 	int check = 0;
-	size_t len;
-	int status;
+	int status, i = 0;
 
 	if (strcmp(args[0], "exit") == 0)
 	{
@@ -26,14 +23,12 @@ int handle_builtins(char *args[], char **environ)
 	}
 	else if (strcmp(args[0], "env") == 0)
 	{
-		env = environ;
-		len = strlen(*env);
-		while (*env)
+		while (environ[i] != NULL)
 		{
 			/*printf("%s\n", *env);*/
-			write(STDOUT_FILENO, *env, len);
+			write(STDOUT_FILENO, environ[i], strlen(environ[i]));
 			write(STDOUT_FILENO, "\n", 1);
-			env++;
+			i++;
 		}
 		/*instead of conitnue*/
 		check = 1;

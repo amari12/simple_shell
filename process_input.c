@@ -128,8 +128,7 @@ void forking(char *args[], char *cmd, char *path)
 
 	path_temp = strdup(path);
 	directory = strtok(path_temp, ":");
-
-	while (directory != NULL)
+	while (directory != NULL) /*look for cmd*/
 	{
 		full_path = malloc(strlen(directory) + strlen(cmd) + 2);
 		sprintf(full_path, "%s/%s", directory, cmd);
@@ -143,7 +142,7 @@ void forking(char *args[], char *cmd, char *path)
 		directory = strtok(NULL, ":");
 	}
 	if (full_path != NULL)
-	{
+	{ /*if full_path == NULL -> cmd not found*/
 		fork_result = fork(); /*gives a pid*/
 		if (fork_result == -1) /*error*/
 		{
