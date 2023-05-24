@@ -5,7 +5,7 @@ Contirbutors:
 	Amari Kotze (amari12)
 	Ntlakala Selamolela (Ntlakala)
 
-Github repository owner:
+Github repository owners:
 
 Simple shell process:
 1. Reading User Input:
