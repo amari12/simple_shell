@@ -12,7 +12,7 @@ Simple shell process:
 The first step is to read input from the user. We can use the "fgets" function in C to read input from the user. Once we have the input, we can parse it to determine the command and its arguments.
 
 2. Parsing User Input:
-Once we have the input from the user, we need to parse it to separate the command and its arguments. We can use the "strtok" function in C to split the input into tokens based on spaces. The first token will be the command, and the remaining tokens will be the arguments.
+Once we have the input from the users, we need to parse it to separate the command and its arguments. We can use the "strtok" function in C to split the input into tokens based on spaces. The first token will be the command, and the remaining tokens will be the arguments.
 
 3. Forking a Child Process:
 After parsing the user input, we need to fork a child process. We can use the "fork" function in C to create a new process that is an exact copy of the parent process.
