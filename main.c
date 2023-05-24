@@ -20,7 +20,7 @@ int main(int argc __attribute__((unused)),
 	char *args[ARGS_SIZE];
 	int exit_loop = 0;
 	char *path; /*, *temp;*/
-	int check; /*for builtin, check for env*/
+	/*int check;*/ /*for builtin, check for env*/
 	/*char **environ = __environ;*/ /*global variable*/
 
 	path = getenv("PATH"); /*get path*/
@@ -40,10 +40,11 @@ int main(int argc __attribute__((unused)),
 		check_comments(input); /*search & handle comments*/
 		split_input(input, args); /*separate input -> args list*/
 		cmd = args[0];
-		check = handle_builtins(args, environ); /*handle builtins*/
-		if (check == 1)
-			continue; /*env builtin or cd -> restart loop*/
-		forking(args, cmd, path); /*fork and exe child process*/
+		/*check =*/
+		handle_builtins(args, environ, argv[0]); /*handle builtins*/
+		/*if (check == 1)*/
+			/*continue;*/ /*env builtin or cd -> restart loop*/
+		forking(args, cmd, path, argv[0]); /*fork and exe child process*/
 	} /*show prompt*/
 	free(input);
 	return (0);

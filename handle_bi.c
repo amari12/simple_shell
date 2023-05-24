@@ -4,10 +4,11 @@
  * handle_builtins - handles builtin functions
  * @args: input string separated into arguments
  * @environ: environmental variables
+ * @prog_name: program name
  * Return: int (check to flag if env was called)
  */
 
-int handle_builtins(char *args[], char **environ)
+int handle_builtins(char *args[], char **environ, char *prog_name)
 {
 	int check = 0;
 	int status, i = 0;
@@ -35,7 +36,7 @@ int handle_builtins(char *args[], char **environ)
 	}
 	else if (strcmp(args[0], "cd") == 0)
 	{
-		change_dir(args);
+		change_dir(args, prog_name);
 		check = 1;
 	}
 	return (check);
@@ -44,10 +45,11 @@ int handle_builtins(char *args[], char **environ)
 /**
  * change_dir - cd builtin
  * @args: input arguments
+ * @prog_name: program name
  * Return: void
  */
 
-void change_dir(char *args[])
+void change_dir(char *args[], char *prog_name)
 {
 	char *home, *prev, *get_result, *change;
 	char current[SIZE];
@@ -66,14 +68,16 @@ void change_dir(char *args[])
 
 	if (change == NULL)
 	{
-		perror("No directory found");
+		/*perror("No directory found");*/
+		fprintf(stderr, "%s: no directory found\n", prog_name);
 		return;
 	}
 	/*printf("Change to dir: %s\n", change);*/
 	result = chdir(change); /*change directory*/
 	if (result != 0)
 	{
-		perror("cd failed");
+		/*perror("cd failed");*/
+		fprintf(stderr, "%s: cd failed\n", prog_name);
 		return;
 	}
 	/*update env var (PWD) with current dir*/
@@ -81,7 +85,8 @@ void change_dir(char *args[])
 	if (get_result != NULL)
 		setenv("PWD", current, 1);
 	else
-		perror("Failed to update current directory");
+		fprintf(stderr, "%s: Failed to update current directory\n", prog_name);
+	/*perror("Failed to update current directory");*/
 	/*printf("current dir: %s\n", current);*/
 }
 

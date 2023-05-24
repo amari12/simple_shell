@@ -18,11 +18,11 @@ extern char **environ;
 void get_input(char **input);
 void get_input2(char **input);
 void split_input(char *input, char *args[]);
-void forking(char *args[], char *cmd, char *path);
+void forking(char *args[], char *cmd, char *path, char *prog_name);
 
 /*file: handle_bi.c*/
-int handle_builtins(char *args[], char **environ);
-void change_dir(char *args[]);
+int handle_builtins(char *args[], char **environ, char *prog_name);
+void change_dir(char *args[], char *prog_name);
 void check_comments(char *input);
 
 #endif

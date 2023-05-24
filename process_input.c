@@ -117,10 +117,11 @@ void split_input(char *input, char *args[])
  * @args: separated input string
  * @cmd: command (args[0])
  * @path: path
+ * @prog_name: program name
  * Return: void
  */
 
-void forking(char *args[], char *cmd, char *path)
+void forking(char *args[], char *cmd, char *path, char *prog_name)
 {
 	pid_t fork_result;
 	char *path_temp, *directory, *full_path = NULL;
@@ -160,7 +161,8 @@ void forking(char *args[], char *cmd, char *path)
 	}
 	else
 	{ /*path == NULL*/
-		perror("Command not found in PATH");
+		/*perror("Command not found in PATH");*/
+		fprintf(stderr, "%s: command not found in PATH\n", prog_name);
 	}
 	free(path_temp);
 	free(full_path);	
