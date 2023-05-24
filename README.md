@@ -3,10 +3,10 @@ May 2023
 
 Contirbutors:
 	Amari Kotze (amari12)
-	Ntlakala Selamolela ()
+	Ntlakala Selamolela (Ntlakala)
 
 Github repository owner:
-	
+
 Simple shell process:
 1. Reading User Input:
 The first step is to read input from the user. We can use the "fgets" function in C to read input from the user. Once we have the input, we can parse it to determine the command and its arguments.
