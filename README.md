@@ -9,7 +9,7 @@ Github repository owners:
 
 Simple shell process:
 1. Reading User Input:
-The first step is to read input from the user. We can use the "fgets" function in C to read input from the user. Once we have the input, we can parse it to determine the command and its arguments.
+The first step is to read input from the users, We can use the "fgets" function in C to read input from the user. Once we have the input, we can parse it to determine the command and its arguments.
 
 2. Parsing User Input:
 Once we have the input from the users, we need to parse it to separate the command and its arguments. We can use the "strtok" function in C to split the input into tokens based on spaces. The first token will be the command, and the remaining tokens will be the arguments.
