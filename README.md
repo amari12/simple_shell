@@ -24,5 +24,5 @@ Once we have forked a child process, we need to execute the command. We can use 
 After executing the command(s), we need to wait for the child process to finish. We can use the "wait" function in C to wait for the child process to finish executing.
 
 6. Looping back to Step 1:
-After the child process has finished executing, we can loop back to step 1 and read input from the users again.
+After the child process has finished executing, we can loop back to step 1 and read input from the user again.
 
