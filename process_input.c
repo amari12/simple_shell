@@ -28,7 +28,6 @@ void get_input(char **input)
 			exit(EXIT_FAILURE);
 		}
 	}
-
 	/*replace new line with string terminator*/
 	if ((*input)[strlen(*input) - 1] == '\n')
 		(*input)[strlen(*input) - 1] = '\0';
@@ -99,14 +98,15 @@ void split_input(char *input, char *args[])
 
 	/*make copy of input string*/
 	strcpy(cp_input, input);
-
+	
 	/*split input string into tokens: args*/
+	check_token = strtok(cp_input, " \n");
 	check_token = strtok(cp_input, " ");
 	while (check_token != NULL)
 	{
 		args[i] = check_token;
 		i++;
-		check_token = strtok(NULL, " ");
+		check_token = strtok(NULL, " \n");
 	}
 	args[i] = NULL; /*last string in array should be NULL*/
 } /*split input*/
@@ -124,17 +124,18 @@ void split_input(char *input, char *args[])
 void forking(char *args[], char *cmd, char *path, char *prog_name)
 {
 	pid_t fork_result;
-	char *path_temp, *directory, *full_path = NULL;
+	char *path_temp = strdup(path), *directory, *full_path = NULL;
 	int status;
 
-	path_temp = strdup(path);
 	directory = strtok(path_temp, ":");
 	while (directory != NULL) /*look for cmd*/
 	{
 		full_path = malloc(strlen(directory) + strlen(cmd) + 2);
 		sprintf(full_path, "%s/%s", directory, cmd);
 		if (access(full_path, X_OK) == 0)
+		{
 			break;
+		}
 		else
 		{
 			free(full_path);
@@ -159,12 +160,28 @@ void forking(char *args[], char *cmd, char *path, char *prog_name)
 		else /*parent*/
 			wait(&status);
 	}
-	else
-	{ /*path == NULL*/
-		/*perror("Command not found in PATH");*/
+	else /*path == NULL*//*perror("Command not found in PATH");*/
 		fprintf(stderr, "%s: command not found in PATH\n", prog_name);
-	}
 	free(path_temp);
-	free(full_path);	
+	free(full_path);
 } /*forking*/
+
+/**
+ * check_spaces - checks if the whole input is just spaces
+ * @input: input string
+ * Return: int (1 = not just spaces, 0 = just spaces)
+ */
+
+int check_spaces(char *input)
+{
+	int i;
+	int not_space = 0;
+
+	for (i = 0; input[i] != '\n'; i++)
+	{
+		if (input[i] != ' ' && input[i] != '\t')
+			not_space = 1;
+	}
+	return (not_space);
+}
 

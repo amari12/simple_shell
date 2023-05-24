@@ -19,6 +19,7 @@ void get_input(char **input);
 void get_input2(char **input);
 void split_input(char *input, char *args[]);
 void forking(char *args[], char *cmd, char *path, char *prog_name);
+int check_spaces(char *input);
 
 /*file: handle_bi.c*/
 int handle_builtins(char *args[], char **environ, char *prog_name);
