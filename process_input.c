@@ -126,13 +126,12 @@ void split_input(char *input, char *args[])
  * Return: int (0 = no errors; 1 = error)
  */
 
-int forking(char *args[], char *cmd)
+int forking(char *args[], char *cmd __attribute__((unused)))
 {
 	pid_t fork_result;
 	char *path = NULL;
 	int status, error = 0;
 
-	(void) cmd;
 	path = check_path(args);
 	if (path != NULL)
 	{

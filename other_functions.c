@@ -1,3 +1,5 @@
+#include "main.h"
+
 /**
  * write_error - handles errors
  * @args: arguments

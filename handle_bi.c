@@ -8,12 +8,16 @@
 
 int handle_builtins(char *args[])
 {
-	int check = 0, status;
+	int check = 0, status, i;
+	char *env;
+	char *parts[] = {"USER", "LANGUAGE", "SESSION", "COMPIZ_CONFIG_PROFILE",
+		"SHLVL", "HOME", "C_IS", "DESKTOP_SESSION", "LOGNAME",
+		"TERM", "PATH", "DISPLAY", "NULL"};
 
 	if (strcmp(args[0], "exit") == 0)
 	{
 		if (args[1] != NULL)
-			status = atoi(args[1]); /*will save as status in main*/
+			status = atoi(args[1]);
 		/*******/
 		else
 			status = EXIT_SUCCESS;
@@ -22,12 +26,6 @@ int handle_builtins(char *args[])
 	}
 	else if (strcmp(args[0], "env") == 0)
 	{
-		int i;
-		char *env;
-		char *parts[] = {"USER", "LANGUAGE", "SESSION", "COMPIZ_CONFIG_PROFILE",
-			"SHLVL", "HOME", "C_IS", "DESKTOP_SESSION", "LOGNAME",
-			"TERM", "PATH", "DISPLAY", "NULL"};
-
 		for (i = 0; parts[i] != NULL; i++)
 		{
 			env = getenv(parts[i]);
@@ -42,11 +40,11 @@ int handle_builtins(char *args[])
 		args = NULL;
 		check = 1;
 	}
-	else if (strcmp(args[0], "cd") == 0)
-	{
-		change_dir(args);
-		check = 1;
-	}
+	/*else if (strcmp(args[0], "cd") == 0)*/
+	/*{*/
+	/*	change_dir(args);*/
+	/*	check = 1;*/
+	/*}*/
 	return (check);
 }
 
@@ -64,7 +62,6 @@ void change_dir(char *args[])
 
 	home = getenv("HOME"); /*assign variables*/
 	prev = getenv("PWD");
-	/*printf("prev: %s\n", prev);*/
 
 	if (args[1] == NULL || strcmp(args[1], "~") == 0)
 		change = home;
