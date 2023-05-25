@@ -7,6 +7,8 @@ Contirbutors:
 
 Github repository owner:
 	amari12
+Github repository name:
+	simple_shell
 
 Simple shell process:
 1. Reading User Input:
