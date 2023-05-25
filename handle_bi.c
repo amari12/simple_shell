@@ -53,7 +53,6 @@ int handle_builtins(char *args[])
 /**
  * change_dir - cd builtin
  * @args: input arguments
- * @prog_name: program name
  * Return: void
  */
 
