@@ -3,23 +3,18 @@
 /**
  * handle_builtins - handles builtin functions
  * @args: input string separated into arguments
- * @environ: environmental variables
- * @prog_name: program name
  * Return: int (check to flag if env was called)
  */
 
 int handle_builtins(char *args[])
 {
-	int check = 0;
-	int status;
+	int check = 0, status;
 
 	if (strcmp(args[0], "exit") == 0)
 	{
 		if (args[1] != NULL)
-		{
 			status = atoi(args[1]); /*will save as status in main*/
-			/*******/
-		}
+		/*******/
 		else
 			status = EXIT_SUCCESS;
 		free(args);

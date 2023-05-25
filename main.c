@@ -19,7 +19,7 @@ int main(int argc __attribute__((unused)),
 	char *cmd;
 	char *args[ARGS_SIZE];
 	int exit_loop = 0, loops = 0, result;
-	
+
 	if (isatty(STDIN_FILENO) == 1)
 	{ /*interactive mode*/
 		/*path = getenv("PATH");*/ /*get path*/
