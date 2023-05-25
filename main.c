@@ -39,7 +39,7 @@ int main(int argc __attribute__((unused)),
 				result = forking(args, cmd); /*fork and exe child process*/
 				loops++;
 				if (result != 0)
-				{
+				{		
 					write_error(args, loops);
 				}
 			}

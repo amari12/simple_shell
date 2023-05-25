@@ -13,8 +13,8 @@ void write_error(char *args[], int loops)
 	char buff[SIZE], pid[50], prefix[7] = "/proc/",
 		loops_str[50];
 	int file, rd;
+	char output[SIZE], err_msg[SIZE];
 
-	/*itoa(getpid(), pid);*/
 	sprintf(pid, "%d", getpid());
 	strcat(prefix, pid);
 	strcat(prefix, "/cmdline");
@@ -27,28 +27,24 @@ void write_error(char *args[], int loops)
 			buff[rd] = '\0';
 			prog = malloc(rd + 1);
 			strncpy(prog, buff, rd);
-/*			for (i = 0; i < rd; i++)*/
-/*			{*/
-/*				if (buff[i] == '\0')*/
-/*					prog[j++] = ' ';*/
-/*				else*/
-/*					prog[j++] = buff[i];*/
-/*			}*/
 			prog[rd] = '\0';
 		}
 		close(file);
 	}
-	/*close(file);*/
-	/*itoa(loops, loops_str);*/
 	sprintf(loops_str, "%d", loops);
-	write(STDOUT_FILENO, prog, strlen(prog));
-	write(STDOUT_FILENO, ": ", 2);
-	write(STDOUT_FILENO, loops_str, strlen(loops_str));
-	write(STDOUT_FILENO, ": ", 2);
-
+	snprintf(output, SIZE, "%s: %s: ", prog, loops_str);
+/*	write(STDOUT_FILENO, prog, strlen(prog));*/
+/*	write(STDOUT_FILENO, ": ", 2);*/
+/*	write(STDOUT_FILENO, loops_str, strlen(loops_str));*/
+/*	write(STDOUT_FILENO, ": ", 2);*/
 	if (args[0] != NULL)
-		perror(args[0]);
+	{
+		snprintf(err_msg, SIZE, "%s: %s\n", args[0], strerror(errno));
+		strcat(output, err_msg);
+		/*perror(args[0]);*/
+	}
 	free(prog);
+	write(STDOUT_FILENO, output, strlen(output));
 }
 
 /**

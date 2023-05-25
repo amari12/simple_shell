@@ -13,20 +13,17 @@ char *get_input(void)
 
 	/*fgets_result = fgets(input, SIZE, stdin);*/
 	result = getline(&input_str, &size, stdin);
-	if (result == -1) /*error*/
+	if (result == EOF)
 	{
-		if (result == EOF)
-		{
-			write(STDOUT_FILENO, "\n", 1);
-			free(input_str);
-			exit(EXIT_SUCCESS);
-		}
-		else
-		{
-			perror("Getline failed ");
-			free(input_str);
-			exit(EXIT_FAILURE);
-		}
+		write(STDOUT_FILENO, "\n", 1);
+		free(input_str);
+		exit(EXIT_SUCCESS);
+	}
+	else if (result == -1)
+	{
+		perror("Getline failed ");
+		free(input_str);
+		exit(EXIT_FAILURE);
 	}
 	if (check_spaces(input_str) == 0) /*empty string/spaces*/
 	{
@@ -137,6 +134,9 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 	pid_t fork_result;
 	char *path = NULL;
 	int status, error = 0;
+	/*int pipe_id[2];*/
+	/*char buffer[SIZE];*/
+	/*ssize_t i, written = 0, result;*/
 
 	path = check_path(args);
 	if (path != NULL)
@@ -149,6 +149,10 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 		} /*fail*/
 		else if (fork_result == 0) /*success -> child process*/
 		{
+			/*redirect stdout to pipe*/
+			/*pipe(pipe_id);*/
+			/*dup2(pipe_id[1], STDOUT_FILENO);*/
+			/*close(pipe_id[0]);*/
 			status = execve(path, args, environ); /*exe cmd*/
 			if (status == -1)
 				error = 1;
@@ -156,7 +160,9 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 			/*exit(EXIT_FAILURE);*/
 		} /*child*/
 		else /*parent*/ /*******************************/
+		{
 			wait(&status);
+		}
 	}
 	free(path);
 	return (error);
