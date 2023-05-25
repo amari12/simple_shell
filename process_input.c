@@ -134,28 +134,47 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 	pid_t fork_result;
 	char *path = NULL;
 	int status;
+	int pipefd[2];
+	char buffer[4069];
+	ssize_t bytesrd;
 
 	path = check_path(args);
 	if (path != NULL)
 	{
+		if (pipe(pipefd) == -1)
+		{
+			perror("pipe");
+			return (1);
+		}
 		fork_result = fork(); /*gives a pid*/
 		if (fork_result == -1) /*error*/
 		{
 			perror("Fork failed");
 			return (1);
-			/*exit(EXIT_FAILURE);*/
-		} /*fail*/
+		}
 		else if (fork_result == 0) /*success -> child process*/
 		{
+			close(pipefd[0]);
+			if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+			{
+				perror("dup2");
+				exit(EXIT_FAILURE);
+			}
 			status = execve(path, args, environ); /*exe cmd*/
 			if (status == -1)
 			{
 				perror("execve");
 				exit(EXIT_FAILURE);
 			}
-		} /*child*/
+		}
 		else /*parent*/
 		{
+			close(pipefd[1]);
+			while ((bytesrd = read(pipefd[0], buffer, sizeof(buffer))) > 0)
+			{
+				write(STDOUT_FILENO, buffer, bytesrd);
+			}
+			close(pipefd[0]);
 			do
 			{
 				if (waitpid(fork_result, &status, WUNTRACED) == -1)
