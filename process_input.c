@@ -2,35 +2,37 @@
 
 /**
  * get_input - reads the input from user and saves as string
- * @input: input string
- * Return: void
+ * 
+ * Return: char *input
  */
 
-void get_input(char **input)
+char *get_input(void)
 {
-	ssize_t fgets_result;
+	int result;
+	char *input_str = NULL;
 	size_t size = SIZE;
 
-	*input = NULL; /*initialise input pointer*/
-
 	/*fgets_result = fgets(input, SIZE, stdin);*/
-	fgets_result = getline(input, &size, stdin);
-	if (fgets_result == -1)
+	result = getline(&input_str, &size, stdin);
+	if (result == -1) /*error*/
 	{
-		if (feof(stdin))
-		{ /*end of file reached*/
-			write(STDOUT_FILENO, "\n", 1);
-			exit(EXIT_SUCCESS);
-		}
-		else
-		{ /*error reading input*/
-			perror("Could not read input");
-			exit(EXIT_FAILURE);
-		}
+		perror("Getline failed ");
+		free(input_str);
+		exit(EXIT_FAILURE);
 	}
-	/*replace new line with string terminator*/
-	if ((*input)[strlen(*input) - 1] == '\n')
-		(*input)[strlen(*input) - 1] = '\0';
+	if (result == EOF) /*end of file*/
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		free(input_str);
+		exit(EXIT_SUCCESS);
+	}
+	
+	if (check_spaces(input_str) == 0) /*empty string/spaces*/
+	{
+		free(input_str);
+		input_str = NULL;
+	}
+	return (input_str);
 } /*get input*/
 
 /**
@@ -92,23 +94,31 @@ void get_input2(char **input)
 
 void split_input(char *input, char *args[])
 {
-	int i = 0;
+	int i = 0, j;
 	char cp_input[SIZE + 1];
 	char *check_token;
+	char **list_tokens;
 
+	list_tokens = malloc(SIZE * sizeof(char *));
+	if (list_tokens == NULL)
+	{
+		free(list_tokens);
+		return;
+	}
 	/*make copy of input string*/
 	strcpy(cp_input, input);
-	
 	/*split input string into tokens: args*/
 	check_token = strtok(cp_input, " \n");
-	check_token = strtok(cp_input, " ");
+	/*check_token = strtok(cp_input, " ");*/
 	while (check_token != NULL)
 	{
-		args[i] = check_token;
+		list_tokens[i] = check_token;
 		i++;
 		check_token = strtok(NULL, " \n");
 	}
 	args[i] = NULL; /*last string in array should be NULL*/
+	for (j = 0; j <= i; j++)
+		args[j] = list_tokens[j];
 } /*split input*/
 
 /**
@@ -118,58 +128,135 @@ void split_input(char *input, char *args[])
  * @cmd: command (args[0])
  * @path: path
  * @prog_name: program name
- * Return: void
+ * Return: int (0 = no errors; 1 = error)
  */
 
-void forking(char *args[], char *cmd, char *path, char *prog_name)
+int forking(char *args[], char *cmd)
 {
 	pid_t fork_result;
-	char *path_temp = strdup(path), *directory, *full_path = NULL;
-	int status;
+	char *path = NULL;
+	int status, error = 0;
 
-	directory = strtok(path_temp, ":");
-	while (directory != NULL) /*look for cmd*/
+	(void) cmd;
+	path = check_path(args);
+	if (path != NULL)
 	{
-		full_path = malloc(strlen(directory) + strlen(cmd) + 2);
-		sprintf(full_path, "%s/%s", directory, cmd);
-		if (access(full_path, X_OK) == 0)
-		{
-			break;
-		}
-		else
-		{
-			free(full_path);
-			full_path = NULL;
-		}
-		directory = strtok(NULL, ":");
-	}
-	if (full_path != NULL)
-	{ /*if full_path == NULL -> cmd not found*/
 		fork_result = fork(); /*gives a pid*/
 		if (fork_result == -1) /*error*/
 		{
 			perror("Fork failed");
-			exit(EXIT_FAILURE);
+			/*exit(EXIT_FAILURE);*/
 		} /*fail*/
 		else if (fork_result == 0) /*success -> child process*/
 		{
-			execve(full_path, args, NULL); /*exe cmd*/
-			perror("execve failed"); /*if exe fails*/
-			exit(EXIT_FAILURE);
+			status = execve(path, args, environ); /*exe cmd*/
+			if (status == -1)
+				error = 1;
+			/*perror("execve failed");*/ /*if exe fails*/
+			/*exit(EXIT_FAILURE);*/
 		} /*child*/
-		else /*parent*/
+		else /*parent*/ /*******************************/
 			wait(&status);
 	}
-	else /*path == NULL*//*perror("Command not found in PATH");*/
-		fprintf(stderr, "%s: command not found in PATH\n", prog_name);
-	free(path_temp);
-	free(full_path);
+	free(path);
+	return (error);
 } /*forking*/
+
+/**
+ * write_error - handles errors
+ * @args: arguments
+ * @loops: nr of loops executed
+ * Return: void
+ */
+
+void write_error(char *args[], int loops)
+{
+	char *prog = NULL;
+	char buff[SIZE], pid[50], prefix[7] = "/proc/",
+	     loops_str[50];
+	int file, rd;
+
+	itoa(getpid(), pid);
+	strcat(prefix, pid);
+	strcat(prefix, "/cmdline");
+
+	file = open(prefix, O_RDONLY);
+	if (file != -1)
+	{
+		rd = read(file, buff, sizeof(prog));
+		if (rd != -1)
+		{
+			prog = malloc(rd * sizeof(char) + 1);
+			strncpy(prog, buff, rd);
+			prog[rd] = '\0';
+		}
+	}
+	close(file);
+	
+	itoa(loops, loops_str);
+	write(STDOUT_FILENO, prog, strlen(prog));
+	write(STDOUT_FILENO, ": ", 2);
+	write(STDOUT_FILENO, loops_str, strlen(loops_str));
+	write(STDOUT_FILENO, ": ", 2);
+
+	perror(*args);
+	free(prog);
+}
+
+/**
+ * check_path - gets the path and checks if the cmd is valid
+ * @args: arguments
+ * Return: char * (NULL if not viable, path)
+ */
+
+char *check_path(char *args[])
+{
+	char *result = NULL;
+	char *cmd = args[0];
+	char *path, *cp_path, *directory;
+
+	if (cmd[0] == '/')
+	{
+		if (access(cmd, X_OK) == 0)
+		{
+			result = strdup((char *) cmd);
+			return (result);
+		}
+	}
+	else
+	{
+		path = getenv("PATH");
+		cp_path = strdup(path);
+		directory = strtok(cp_path, ":");
+		while (directory != NULL)
+		{
+			result = malloc(strlen(directory) + strlen(cmd) + 2);
+			if (result == NULL)
+			{
+				free(result);
+				return(NULL);
+			}
+			strcpy(result, directory);
+			strcat(result, "/");
+			strcat(result, (char *) cmd);
+			if (access(result, X_OK) == 0)
+			{
+				free(cp_path);
+				return(result);
+			}
+			free(result);
+			directory = strtok(NULL, ":");
+		}
+		free(cp_path);
+	}
+	return (NULL);
+}
+
 
 /**
  * check_spaces - checks if the whole input is just spaces
  * @input: input string
- * Return: int (1 = not just spaces, 0 = just spaces)
+ * Return: int (1 = found chars, 0 = just spaces)
  */
 
 int check_spaces(char *input)

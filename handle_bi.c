@@ -8,35 +8,48 @@
  * Return: int (check to flag if env was called)
  */
 
-int handle_builtins(char *args[], char **environ, char *prog_name)
+int handle_builtins(char *args[])
 {
 	int check = 0;
-	int status, i = 0;
+	int status;
 
 	if (strcmp(args[0], "exit") == 0)
 	{
 		if (args[1] != NULL)
+		{
 			status = atoi(args[1]); /*will save as status in main*/
+			/*******/
+		}
 		else
 			status = EXIT_SUCCESS;
+		free(args);
 		exit(status);
-		/*exit(EXIT_SUCCESS);*/
 	}
 	else if (strcmp(args[0], "env") == 0)
 	{
-		while (environ[i] != NULL)
+		int i;
+		char *env;
+		char *parts[] = {"USER", "LANGUAGE", "SESSION", "COMPIZ_CONFIG_PROFILE",
+			"SHLVL", "HOME", "C_IS", "DESKTOP_SESSION", "LOGNAME",
+			"TERM", "PATH", "DISPLAY", "NULL"};
+
+		for (i = 0; parts[i] != NULL; i++)
 		{
-			/*printf("%s\n", *env);*/
-			write(STDOUT_FILENO, environ[i], strlen(environ[i]));
-			write(STDOUT_FILENO, "\n", 1);
-			i++;
+			env = getenv(parts[i]);
+			if (env != NULL)
+			{
+				write(STDOUT_FILENO, parts[i], strlen(parts[i]));
+				write(STDOUT_FILENO, "=", 1);
+				write(STDOUT_FILENO, env, strlen(env));
+				write(STDOUT_FILENO, "\n", 1);
+			}
 		}
-		/*instead of conitnue*/
+		args = NULL;
 		check = 1;
 	}
 	else if (strcmp(args[0], "cd") == 0)
 	{
-		change_dir(args, prog_name);
+		change_dir(args);
 		check = 1;
 	}
 	return (check);
@@ -49,7 +62,7 @@ int handle_builtins(char *args[], char **environ, char *prog_name)
  * Return: void
  */
 
-void change_dir(char *args[], char *prog_name)
+void change_dir(char *args[])
 {
 	char *home, *prev, *get_result, *change;
 	char current[SIZE];
@@ -69,7 +82,7 @@ void change_dir(char *args[], char *prog_name)
 	if (change == NULL)
 	{
 		/*perror("No directory found");*/
-		fprintf(stderr, "%s: no directory found\n", prog_name);
+		/*fprintf(stderr, "%s: no directory found\n", prog_name);*/
 		return;
 	}
 	/*printf("Change to dir: %s\n", change);*/
@@ -77,15 +90,15 @@ void change_dir(char *args[], char *prog_name)
 	if (result != 0)
 	{
 		/*perror("cd failed");*/
-		fprintf(stderr, "%s: cd failed\n", prog_name);
+	/*	fprintf(stderr, "%s: cd failed\n", prog_name);*/
 		return;
 	}
 	/*update env var (PWD) with current dir*/
 	get_result = getcwd(current, sizeof(current));
 	if (get_result != NULL)
 		setenv("PWD", current, 1);
-	else
-		fprintf(stderr, "%s: Failed to update current directory\n", prog_name);
+	/*else*/
+	/*	fprintf(stderr, "%s: Failed to update current directory\n", prog_name);*/
 	/*perror("Failed to update current directory");*/
 	/*printf("current dir: %s\n", current);*/
 }
