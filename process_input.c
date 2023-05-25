@@ -134,7 +134,7 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 	pid_t fork_result;
 	char *path = NULL;
 	int status;
-	int pipefd[2];
+	int pipefd[2], i;
 	char buffer[4069];
 	ssize_t bytesrd;
 
@@ -172,7 +172,13 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 			close(pipefd[1]);
 			while ((bytesrd = read(pipefd[0], buffer, sizeof(buffer))) > 0)
 			{
+				for (i = 0; i < bytesrd; i++)
+				{
+					if (buffer[i] == '\n')
+						buffer[i] = '\t';
+				}
 				write(STDOUT_FILENO, buffer, bytesrd);
+				write(STDOUT_FILENO, "\n", 1);
 			}
 			close(pipefd[0]);
 			do

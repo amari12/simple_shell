@@ -46,7 +46,7 @@ int main(int argc __attribute__((unused)),
 			}
 			free(input);
 		} /*show prompt*/
-		free(input);
+	/*	free(input);*/
 	}
 	/*else non interactive mode*/
 	return (0);
