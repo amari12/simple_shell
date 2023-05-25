@@ -14,28 +14,40 @@ void write_error(char *args[], int loops)
 		loops_str[50];
 	int file, rd;
 
-	itoa(getpid(), pid);
+	/*itoa(getpid(), pid);*/
+	sprintf(pid, "%d", getpid());
 	strcat(prefix, pid);
 	strcat(prefix, "/cmdline");
 	file = open(prefix, O_RDONLY);
 	if (file != -1)
 	{
-		rd = read(file, buff, sizeof(prog));
+		rd = read(file, buff, sizeof(buff));
 		if (rd != -1)
 		{
-			prog = malloc(rd * sizeof(char) + 1);
+			buff[rd] = '\0';
+			prog = malloc(rd + 1);
 			strncpy(prog, buff, rd);
+/*			for (i = 0; i < rd; i++)*/
+/*			{*/
+/*				if (buff[i] == '\0')*/
+/*					prog[j++] = ' ';*/
+/*				else*/
+/*					prog[j++] = buff[i];*/
+/*			}*/
 			prog[rd] = '\0';
 		}
+		close(file);
 	}
-	close(file);
-	itoa(loops, loops_str);
+	/*close(file);*/
+	/*itoa(loops, loops_str);*/
+	sprintf(loops_str, "%d", loops);
 	write(STDOUT_FILENO, prog, strlen(prog));
 	write(STDOUT_FILENO, ": ", 2);
 	write(STDOUT_FILENO, loops_str, strlen(loops_str));
 	write(STDOUT_FILENO, ": ", 2);
 
-	perror(args[0]);
+	if (args[0] != NULL)
+		perror(args[0]);
 	free(prog);
 }
 

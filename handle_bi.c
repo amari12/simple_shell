@@ -21,7 +21,7 @@ int handle_builtins(char *args[])
 		/*******/
 		else
 			status = EXIT_SUCCESS;
-		free(args);
+		/*free(args);*/
 		exit(status);
 	}
 	else if (strcmp(args[0], "env") == 0)

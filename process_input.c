@@ -98,12 +98,13 @@ void split_input(char *input, char *args[])
 	int i = 0, j;
 	char cp_input[SIZE + 1];
 	char *check_token;
-	char **list_tokens;
+	char **list_tokens = NULL;
 
-	list_tokens = malloc(SIZE * sizeof(char *));
+	list_tokens = malloc((SIZE + 1) * sizeof(char *));
 	if (list_tokens == NULL)
 	{
-		free(list_tokens);
+		perror("Failed to allocate memory");
+		/*free(list_tokens);i*/
 		return;
 	}
 	/*make copy of input string*/
@@ -111,15 +112,17 @@ void split_input(char *input, char *args[])
 	/*split input string into tokens: args*/
 	check_token = strtok(cp_input, " \n");
 	/*check_token = strtok(cp_input, " ");*/
-	while (check_token != NULL)
+	while (check_token != NULL && i < SIZE)
 	{
 		list_tokens[i] = check_token;
 		i++;
 		check_token = strtok(NULL, " \n");
 	}
-	args[i] = NULL; /*last string in array should be NULL*/
+	list_tokens[i] = NULL; /*last string in array should be NULL*/
 	for (j = 0; j < i; j++)
 		args[j] = list_tokens[j];
+	args[j] = NULL;
+	free(list_tokens);
 } /*split input*/
 
 /**
