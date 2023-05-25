@@ -15,15 +15,18 @@ char *get_input(void)
 	result = getline(&input_str, &size, stdin);
 	if (result == -1) /*error*/
 	{
-		perror("Getline failed ");
-		free(input_str);
-		exit(EXIT_FAILURE);
-	}
-	if (result == EOF) /*end of file*/
-	{
-		write(STDOUT_FILENO, "\n", 1);
-		free(input_str);
-		exit(EXIT_SUCCESS);
+		if (result == EOF)
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			free(input_str);
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			perror("Getline failed ");
+			free(input_str);
+			exit(EXIT_FAILURE);
+		}
 	}
 	if (check_spaces(input_str) == 0) /*empty string/spaces*/
 	{
