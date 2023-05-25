@@ -134,9 +134,11 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 	pid_t fork_result;
 	char *path = NULL;
 	int status;
-	int pipefd[2], i;
+	int pipefd[2];
 	char buffer[4069];
 	ssize_t bytesrd;
+	FILE *stdout_file;
+	int stdout_fd;
 
 	path = check_path(args);
 	if (path != NULL)
@@ -170,16 +172,25 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 		else /*parent*/
 		{
 			close(pipefd[1]);
+			stdout_fd = open("stdout.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (stdout_fd == -1)
+			{
+				perror("open");
+				return (1);
+			}
+			stdout_file = fdopen(stdout_fd, "w");
+			if (stdout_file == NULL)
+			{
+				perror("fdopen");
+				close(stdout_fd);
+				return (1);
+			}
 			while ((bytesrd = read(pipefd[0], buffer, sizeof(buffer))) > 0)
 			{
-				for (i = 0; i < bytesrd; i++)
-				{
-					if (buffer[i] == '\n')
-						buffer[i] = '\t';
-				}
 				write(STDOUT_FILENO, buffer, bytesrd);
-				write(STDOUT_FILENO, "\n", 1);
+				fwrite(buffer, 1, bytesrd, stdout_file);
 			}
+			fclose(stdout_file);
 			close(pipefd[0]);
 			do
 			{

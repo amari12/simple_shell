@@ -1,0 +1,13 @@
+AUTHORS
+bin_ls.bash
+checker.bash
+generate-authors.sh
+handle_bi.c
+hsh
+main.c
+main.h
+other_functions.c
+own_functions.c
+process_input.c
+README.md
+stdout.txt
