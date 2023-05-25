@@ -18,7 +18,7 @@ int main(int argc __attribute__((unused)),
 	/*char *exit_msg = "EOF\n...\n";*/
 	char *cmd;
 	char *args[ARGS_SIZE];
-	int exit_loop = 0, loops = 0, result;
+	int exit_loop = 0, loops = 0; /*, result;*/
 
 	if (isatty(STDIN_FILENO) == 1)
 	{ /*interactive mode*/
@@ -36,12 +36,13 @@ int main(int argc __attribute__((unused)),
 				cmd = args[0];
 				if (handle_builtins(args) == 1) /*handle builtins*/
 					continue; /*env builtin or cd -> restart loop*/
-				result = forking(args, cmd); /*fork and exe child process*/
+			/*	result =*/ 
+				forking(args, cmd); /*fork and exe child process*/
 				loops++;
-				if (result != 0)
-				{		
-					write_error(args, loops);
-				}
+			/*	if (result != 0)*/
+			/*	{		*/
+			/*		write_error(args, loops);*/
+			/*	}*/
 			}
 			free(input);
 		} /*show prompt*/

@@ -133,10 +133,7 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 {
 	pid_t fork_result;
 	char *path = NULL;
-	int status, error = 0;
-	/*int pipe_id[2];*/
-	/*char buffer[SIZE];*/
-	/*ssize_t i, written = 0, result;*/
+	int status;
 
 	path = check_path(args);
 	if (path != NULL)
@@ -145,26 +142,33 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 		if (fork_result == -1) /*error*/
 		{
 			perror("Fork failed");
+			return (1);
 			/*exit(EXIT_FAILURE);*/
 		} /*fail*/
 		else if (fork_result == 0) /*success -> child process*/
 		{
-			/*redirect stdout to pipe*/
-			/*pipe(pipe_id);*/
-			/*dup2(pipe_id[1], STDOUT_FILENO);*/
-			/*close(pipe_id[0]);*/
 			status = execve(path, args, environ); /*exe cmd*/
 			if (status == -1)
-				error = 1;
-			/*perror("execve failed");*/ /*if exe fails*/
-			/*exit(EXIT_FAILURE);*/
+			{
+				perror("execve");
+				exit(EXIT_FAILURE);
+			}
 		} /*child*/
-		else /*parent*/ /*******************************/
+		else /*parent*/
 		{
-			wait(&status);
+			do
+			{
+				if (waitpid(fork_result, &status, WUNTRACED) == -1)
+				{
+					perror("waitpid");
+					return (1);
+				}
+			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		}
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
 	}
 	free(path);
-	return (error);
+	return (1);
 } /*forking*/
 
