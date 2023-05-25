@@ -118,7 +118,7 @@ void split_input(char *input, char *args[])
 		check_token = strtok(NULL, " \n");
 	}
 	args[i] = NULL; /*last string in array should be NULL*/
-	for (j = 0; j <= i; j++)
+	for (j = 0; j < i; j++)
 		args[j] = list_tokens[j];
 } /*split input*/
 

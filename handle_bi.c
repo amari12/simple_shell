@@ -37,7 +37,7 @@ int handle_builtins(char *args[])
 				write(STDOUT_FILENO, "\n", 1);
 			}
 		}
-		args = NULL;
+		/*args = NULL;*/
 		check = 1;
 	}
 	/*else if (strcmp(args[0], "cd") == 0)*/

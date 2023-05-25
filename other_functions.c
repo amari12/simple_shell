@@ -35,7 +35,7 @@ void write_error(char *args[], int loops)
 	write(STDOUT_FILENO, loops_str, strlen(loops_str));
 	write(STDOUT_FILENO, ": ", 2);
 
-	perror(*args);
+	perror(args[0]);
 	free(prog);
 }
 
