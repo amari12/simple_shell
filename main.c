@@ -30,7 +30,8 @@ int main(int argc, char **argv)
 				exit(126); /*exit status*/
 			if (errno == ENOENT) /*error: file not found*/
 			{
-				err_msg_len = snprintf(err_msg, sizeof(err_msg), "%s: 0: Can't open %s\n", argv[0], argv[1]);
+				err_msg_len = snprintf(err_msg, sizeof(err_msg),
+						"%s: 0: Can't open %s\n", argv[0], argv[1]);
 				write(STDERR_FILENO, err_msg, err_msg_len);
 				exit(127);
 			}
