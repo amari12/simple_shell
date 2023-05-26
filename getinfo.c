@@ -69,7 +69,7 @@ void free_inf(inf_t *inf, int all)
 		bfree((void **)inf->cmd_buf);
 		if (inf->readfd > 2)
 			close(inf->readfd);
-		_putchar(BUF_FLUSH);
+		_putchar(FLUSH);
 	}
 }
 

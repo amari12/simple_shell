@@ -2,18 +2,21 @@
 
 /**
  *_eputs - prints an input string
- * @str: the string to be printed
- *
- * Return: Nothing
+ * @str: str
+ * Return: void
  */
+
 void _eputs(char *str)
 {
 	int i = 0;
 
-	if (!str)
+	/*check if empty*/
+	if (str == NULL)
 		return;
+	/*loop*/
 	while (str[i] != '\0')
 	{
+		/*writes*/
 		_eputchar(str[i]);
 		i++;
 	}
@@ -21,66 +24,74 @@ void _eputs(char *str)
 
 /**
  * _eputchar - writes the character c to stderr
- * @c: The character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
+ * @c: char
+ * Return: success 1, error -1
  */
+
 int _eputchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WRITE_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	/*If the character is FLUSH or the buffer is full*/
+	if (c == FLUSH || i >= WRITE_SIZE)
 	{
+		/*Write the buffer contents to the */
+		/*standard error stream (file descriptor 2)*/
 		write(2, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c != FLUSH)
 		buf[i++] = c;
+	/*success*/
 	return (1);
 }
 
 /**
  * _putfd - writes the character c to given fd
- * @c: The character to print
- * @fd: The filedescriptor to write to
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
+ * @c: char
+ * @fd:  filedescriptor to write to
+ * Return: On success 1, error -1
  */
+
 int _putfd(char c, int fd)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WRITE_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	/* the char = FLUSH marker or the buffer is full*/
+	if (c == FLUSH || i >= WRITE_SIZE)
 	{
+		/*Write contents of buffer to file descriptor*/
 		write(fd, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	/*not fluch marker*/
+	/*Store the character in the buffer and increment the index*/
+	if (c != FLUSH)
 		buf[i++] = c;
-	return (1);
+	return (1); /*success*/
 }
 
 /**
  *_putsfd - prints an input string
- * @str: the string to be printed
+ * @str: string
  * @fd: the filedescriptor to write to
- *
- * Return: the number of chars put
+ * Return: the number of chars printed
  */
+
 int _putsfd(char *str, int fd)
 {
 	int i = 0;
 
-	if (!str)
+	if (str == NULL) /*no chars to print*/
 		return (0);
+	/*chars to print*/
 	while (*str)
 	{
+		/*write each character tofd*/
 		i += _putfd(*str++, fd);
 	}
-	return (i);
+	return (i); /*success - chars printed*/
 }
 

@@ -13,9 +13,9 @@
 #include <errno.h>
 
 /* for read/write buffers */
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
-#define BUF_FLUSH -1
+#define READ_SIZE 1024
+#define WRITE_SIZE 1024
+#define FLUSH -1
 
 /* for command chaining */
 #define CMD_NORM	0
