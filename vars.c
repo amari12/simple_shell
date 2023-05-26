@@ -125,26 +125,26 @@ int replace_vars(inf_t *inf)
 		if (inf->argv[i][0] != '$' || !inf->argv[i][1])
 			continue;
 
-		if (!_strcmp(inf->argv[i], "$?"))
+		if (!strcmp(inf->argv[i], "$?"))
 		{
 			replace_string(&(inf->argv[i]),
-					_strdup(convert_number(inf->status, 10, 0)));
+					strdup(convert_number(inf->status, 10, 0)));
 			continue;
 		}
-		if (!_strcmp(inf->argv[i], "$$"))
+		if (!strcmp(inf->argv[i], "$$"))
 		{
 			replace_string(&(inf->argv[i]),
-					_strdup(convert_number(getpid(), 10, 0)));
+					strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
 		node = node_starts_with(inf->env, &inf->argv[i][1], '=');
 		if (node)
 		{
 			replace_string(&(inf->argv[i]),
-					_strdup(_strchr(node->str, '=') + 1));
+					strdup(strchr(node->str, '=') + 1));
 			continue;
 		}
-		replace_string(&inf->argv[i], _strdup(""));
+		replace_string(&inf->argv[i], strdup(""));
 
 	}
 	return (0);
