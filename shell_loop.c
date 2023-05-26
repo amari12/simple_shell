@@ -99,7 +99,7 @@ void find_cmd(inf_t *inf)
 	for (i = 0, j = 0; inf->arg[i]; i++)
 		if (!is_delim(inf->arg[i], " \t\n"))
 			j++;
-	if (j == NULL)
+	if (!j)
 		return;
 	path = find_path(inf, _getenv(inf, "PATH="), inf->argv[0]);
 	if (path != NULL)
