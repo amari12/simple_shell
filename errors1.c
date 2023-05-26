@@ -1,4 +1,4 @@
-#include "main.h"
+#include "shell.h"
 
 /**
  * _erratoi - converts a string to an integer
@@ -12,7 +12,7 @@ int _erratoi(char *s)
 	unsigned long int result = 0;
 
 	if (*s == '+')
-		s++;
+		s++;  /* TODO: why does this make main return 255? */
 	for (i = 0;  s[i] != '\0'; i++)
 	{
 		if (s[i] >= '0' && s[i] <= '9')
@@ -30,18 +30,18 @@ int _erratoi(char *s)
 
 /**
  * print_error - prints an error message
- * @inf: the parameter & return inf struct
+ * @info: the parameter & return info struct
  * @estr: string containing specified error type
  * Return: 0 if no numbers in string, converted number otherwise
  *        -1 on error
  */
-void print_error(inf_t *inf, char *estr)
+void print_error(info_t *info, char *estr)
 {
-	_eputs(inf->fname);
+	_eputs(info->fname);
 	_eputs(": ");
-	print_d(inf->line_count, STDERR_FILENO);
+	print_d(info->line_count, STDERR_FILENO);
 	_eputs(": ");
-	_eputs(inf->argv[0]);
+	_eputs(info->argv[0]);
 	_eputs(": ");
 	_eputs(estr);
 }
@@ -89,10 +89,10 @@ int print_d(int input, int fd)
  * convert_number - converter function, a clone of itoa
  * @num: number
  * @base: base
- * @flags: arg flags
- * Return: string converted
+ * @flags: argument flags
+ *
+ * Return: string
  */
-
 char *convert_number(long int num, int base, int flags)
 {
 	static char *array;
@@ -122,26 +122,20 @@ char *convert_number(long int num, int base, int flags)
 }
 
 /**
- * remove_comments - replaces first instance of '#' with '\0'
- * @buffer: string
- * Return: void
+ * remove_comments - function replaces first instance of '#' with '\0'
+ * @buf: address of the string to modify
+ *
+ * Return: Always 0;
  */
-
-void remove_comments(char *buffer)
+void remove_comments(char *buf)
 {
 	int i;
 
-	/*loop through and look for comment*/
-	for (i = 0; buffer[i] != '\0'; i++)
-	{
-		if (buffer[i] == '#')
+	for (i = 0; buf[i] != '\0'; i++)
+		if (buf[i] == '#' && (!i || buf[i - 1] == ' '))
 		{
-			if (!i || buffer[i - 1] == ' ')
-			{ /*!i check if index is zero*/
-				buffer[i] = '\0';
-				break;
-			}
+			buf[i] = '\0';
+			break;
 		}
-	}
 }
 
