@@ -1,50 +1,45 @@
-#include "main.h"
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "shell.h"
 
 /**
- * main - main function / entry point
- * Return: int
+ * main - entry point
+ * @ac: arg count
+ * @av: arg vector
+ *
+ * Return: 0 on success, 1 on error
  */
-
-int main(void)
+int main(int ac, char **av)
 {
-	char *input;
-	char *cmd;
-	char *args[ARGS_SIZE];
-	int exit_loop = 0, loops = 0, result;
+	info_t info[] = { INFO_INIT };
+	int fd = 2;
 
-	if (isatty(STDIN_FILENO) == 1)
-	{ /*interactive mode*/
-		while (exit_loop != 1) /*shell loop*/
+	asm ("mov %1, %0\n\t"
+		"add $3, %0"
+		: "=r" (fd)
+		: "r" (fd));
+
+	if (ac == 2)
+	{
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
 		{
-			write(STDOUT_FILENO, "our shell>> ", 12);
-			fflush(stdout);
-			input = get_input(); /*read input*/
-			/*get_input2(&input);*/ /*advanced*/
-			if (input != NULL)
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
 			{
-				check_comments(input); /*search & handle comments*/
-				split_input(input, args); /*separate input -> args list*/
-				cmd = args[0];
-				if (handle_builtins(args) == 1) /*handle builtins*/
-					continue; /*env builtin or cd -> restart loop*/
-				result = forking(args, cmd); /*fork and exe child process*/
-				loops++;
-				if (result != 0)
-				{
-				/*	write_error(args, loops);*/
-					args[0] = "exit";
-					handle_builtins(args);
-				}
-				/*print stdout - stdout.txt*/
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
+				exit(127);
 			}
-			free(input);
+			return (EXIT_FAILURE);
 		}
+		info->readfd = fd;
 	}
-	/*else non interactive mode*/
-	return (0);
+	populate_env_list(info);
+	read_history(info);
+	hsh(info, av);
+	return (EXIT_SUCCESS);
 }
 
