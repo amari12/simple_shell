@@ -40,7 +40,7 @@ ssize_t input_buffer(inf_t *inf, char **buffer, size_t *len)
 				inf->cmd_buffer = buffer;
 			}
 		} /*if*/
-	}/*if (!*len)*/
+	} /*if (!*len)*/
 	return (result);
 }
 
@@ -111,7 +111,7 @@ ssize_t read_buffer(inf_t *inf, char *buffer, size_t *i)
 /**
  * _getline - gets line of input from STDIN
  * @inf: struct args
- * @ptr: address 
+ * @ptr: address
  * @length: size of ptr buffer
  * Return: int s
  */
@@ -139,7 +139,7 @@ int _getline(inf_t *inf, char **ptr, size_t *length)
 		line_len = end - (buffer + i) + 1;
 	else /*no new line char*/
 		line_len = len - i;
-	new_p = realloc(line_p,(line_len + 1) * sizeof(char));
+	new_p = realloc(line_p, (line_len + 1) * sizeof(char));
 	if (new_p == NULL) /*if realloc failed*/
 	{
 		if (line_p != NULL)

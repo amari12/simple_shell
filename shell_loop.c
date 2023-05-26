@@ -1,10 +1,10 @@
 #include "main.h"
 
 /**
- * hsh - main shell loop
+ * loop - main shell loop
  * @inf: info struct
  * @argv: the arguments
- * Return: 0 on success, 1 on error, or error code
+ * Return: 0 success, 1 error, else error code
  */
 
 int loop(inf_t *inf, char **argv)
@@ -80,15 +80,15 @@ int find_bi(inf_t *inf)
 }
 
 /**
- * find_cmd - finds a command in PATH
- * @inf: the parameter & return inf struct
- *
+ * find_cmd - find command in PATH
+ * @inf: struct args
  * Return: void
  */
+
 void find_cmd(inf_t *inf)
 {
 	char *path = NULL;
-	int i, k;
+	int i, j;
 
 	inf->path = inf->argv[0];
 	if (inf->linecount_flag == 1)
@@ -96,14 +96,13 @@ void find_cmd(inf_t *inf)
 		inf->line_count++;
 		inf->linecount_flag = 0;
 	}
-	for (i = 0, k = 0; inf->arg[i]; i++)
+	for (i = 0, j = 0; inf->arg[i]; i++)
 		if (!is_delim(inf->arg[i], " \t\n"))
-			k++;
-	if (!k)
+			j++;
+	if (j == NULL)
 		return;
-
 	path = find_path(inf, _getenv(inf, "PATH="), inf->argv[0]);
-	if (path)
+	if (path != NULL)
 	{
 		inf->path = path;
 		fork_cmd(inf);

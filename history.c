@@ -28,8 +28,7 @@ int read_history(inf_t *inf)
 	if (buffer == NULL) /*malloc failed*/
 		return (0);
 	rdlen = read(fd, buffer, fsize);
-	/*null terminate*/
-	buffer[fsize] = 0;
+	buffer[fsize] = 0; /*null terminate*/
 	if (rdlen <= 0) /*read failed / nothing was read */
 		return (free(buffer), 0);
 	close(fd);
@@ -48,8 +47,7 @@ int read_history(inf_t *inf)
 	while (inf->h_count-- >= HIST_MAX) /*delete history*/
 		delete_node_at_index(&(inf->history), 0);
 	renumber_history(inf);
-	/*return final history count*/
-	return (inf->h_count);
+	return (inf->h_count); /*return final history count*/
 }
 
 /**

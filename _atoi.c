@@ -14,7 +14,7 @@ int is_interactive(inf_t *inf)
 /**
  * is_delim - checks if char is a valid delimeter
  * @c: char
- * @delim: delimeter string
+ * @d: delimeter string
  * Return: int (1 true, 0 false)
  */
 

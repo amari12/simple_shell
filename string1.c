@@ -18,7 +18,7 @@ void _putstr(char *str)
 /**
  * _putchar - writes character to stdout
  * @c: character to print
- * Return: success 1; error -1;
+ * Return: success 1, error -1
  * errno is set
  */
 
