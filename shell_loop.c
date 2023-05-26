@@ -2,7 +2,7 @@
 
 /**
  * loop - main shell loop
- * @inf: info struct
+ * @inf: inf struct
  * @argv: the arguments
  * Return: 0 success, 1 error, else error code
  */
@@ -55,8 +55,8 @@ int loop(inf_t *inf, char **argv)
 
 int find_bi(inf_t *inf)
 {
-	int i, result = -1;
-	builtin_table bi_table[] = {
+	int i, built_in_ret = -1;
+	builtin_table builtintbl[] = {
 		{"exit", _myexit},
 		{"env", _myenv},
 		{"help", _myhelp},
@@ -68,15 +68,14 @@ int find_bi(inf_t *inf)
 		{NULL, NULL}
 	};
 
-	/*look through bi's and compare cmd*/
-	for (i = 0; bi_table[i].type; i++)
-		if (strcmp(inf->argv[0], bi_table[i].type) == 0)
+	for (i = 0; builtintbl[i].type; i++)
+		if (strcmp(inf->argv[0], builtintbl[i].type) == 0)
 		{
 			inf->line_count++;
-			result = bi_table[i].func(inf);
+			built_in_ret = builtintbl[i].func(inf);
 			break;
 		}
-	return (result);
+	return (built_in_ret);
 }
 
 /**
@@ -88,7 +87,7 @@ int find_bi(inf_t *inf)
 void find_cmd(inf_t *inf)
 {
 	char *path = NULL;
-	int i, j;
+	int i, k;
 
 	inf->path = inf->argv[0];
 	if (inf->linecount_flag == 1)
@@ -96,28 +95,27 @@ void find_cmd(inf_t *inf)
 		inf->line_count++;
 		inf->linecount_flag = 0;
 	}
-	/*count non delim chars*/
-	for (i = 0, j = 0; inf->arg[i]; i++)
+	for (i = 0, k = 0; inf->arg[i]; i++)
 		if (!is_delim(inf->arg[i], " \t\n"))
-			j++;
-	if (!j) /*no non-delim chars*/
+			k++;
+	if (!k)
 		return;
-	/*look for path*/
+
 	path = find_path(inf, _getenv(inf, "PATH="), inf->argv[0]);
-	if (path != NULL)
-	{ /*valid path found*/
+	if (path)
+	{
 		inf->path = path;
-		fork_cmd(inf); /*forking*/
+		fork_cmd(inf);
 	}
 	else
-	{ /*path not found but cmd meets conditions*/
+	{
 		if ((is_interactive(inf) || _getenv(inf, "PATH=")
-			|| inf->argv[0][0] == '/') && is_cmd(inf, inf->argv[0]))
-			fork_cmd(inf); /*forking*/
+					|| inf->argv[0][0] == '/') && is_cmd(inf, inf->argv[0]))
+			fork_cmd(inf);
 		else if (*(inf->arg) != '\n')
-		{ /*cmd not found and arg not new line*/
-			inf->status = 127; /*stderr*/
-			print_error(inf, "not found\n"); /*error msg*/
+		{
+			inf->status = 127;
+			print_error(inf, "not found\n");
 		}
 	}
 }
