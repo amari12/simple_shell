@@ -26,28 +26,24 @@ void set_inf(inf_t *inf, char **argv)
 	int i = 0;
 
 	inf->fname = argv[0];
-	/*check for additional args*/
 	if (inf->arg)
 	{
-		/*split input*/
 		inf->argv = _strtok1(inf->arg, " \t");
-		if (!inf->argv) /*tokenisation failed*/
+		if (!inf->argv)
 		{
-			/*memory allocation*/
+
 			inf->argv = malloc(sizeof(char *) * 2);
 			if (inf->argv)
-			{ /*assign arguments*/
+			{
 				inf->argv[0] = strdup(inf->arg);
 				inf->argv[1] = NULL;
 			}
 		}
-		/*count args*/
 		for (i = 0; inf->argv && inf->argv[i]; i++)
 			;
-		inf->argc = i; /*count*/
-		/*Replace aliases with their corresponding values*/
+		inf->argc = i;
+
 		replace_alias(inf);
-		/*Replace aliases with their corresponding values*/
 		replace_vars(inf);
 	}
 }
