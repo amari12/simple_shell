@@ -1,5 +1,11 @@
 #include "main.h"
 
+/**
+ * _putstr - prints a str
+ * @str: string
+ * Return: void
+ */
+
 void _putstr(char *str)
 {
 	int i = 0;
