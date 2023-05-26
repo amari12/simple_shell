@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-* main - entry point
+* main - main functions -> entry point
 * @argc: arg count
 * @argv: arg vector
 * Return: int (0 on success, 1 on error)

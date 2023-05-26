@@ -6,6 +6,7 @@
  *          constant function prototype.
  * Return: Always 0
  */
+
 int _myenv(inf_t *inf)
 {
 	print_list_str(inf->env);
@@ -19,6 +20,7 @@ int _myenv(inf_t *inf)
  *
  * Return: the value
  */
+
 char *_getenv(inf_t *inf, const char *name)
 {
 	list_t *node = inf->env;
@@ -41,6 +43,7 @@ char *_getenv(inf_t *inf, const char *name)
  *        constant function prototype.
  *  Return: Always 0
  */
+
 int _mysetenv(inf_t *inf)
 {
 	if (inf->argc != 3)
@@ -59,6 +62,7 @@ int _mysetenv(inf_t *inf)
  *        constant function prototype.
  *  Return: Always 0
  */
+
 int _myunsetenv(inf_t *inf)
 {
 	int i;
@@ -76,10 +80,10 @@ int _myunsetenv(inf_t *inf)
 
 /**
  * populate_env_list - populates env linked list
- * @inf: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
+ * @inf: Structure of arguments
+ * Return: int 0
  */
+
 int populate_env_list(inf_t *inf)
 {
 	list_t *node = NULL;
