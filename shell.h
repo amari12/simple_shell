@@ -104,6 +104,7 @@ typedef struct passinfo
  *@type: the builtin command flag
  *@func: the function
  */
+
 typedef struct builtin
 {
 	char *type;
@@ -112,7 +113,7 @@ typedef struct builtin
 
 
 /* file: shell_loop.c */
-int hsh(inf_t *, char **);
+int loop(inf_t *, char **);
 int find_builtin(inf_t *);
 void find_cmd(inf_t *);
 void fork_cmd(inf_t *);

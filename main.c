@@ -2,36 +2,38 @@
 
 /**
  * main - entry point
- * @ac: arg count
- * @av: arg vector
- *
- * Return: 0 on success, 1 on error
+ * @argc: argc
+ * @argv: argv
+ * Return: 0 success, 1 error
  */
-int main(int ac, char **av)
+
+int main(int argc, char **argv)
 {
 	inf_t inf[] = { INFO_INIT };
 	int fd = 2;
 
+	/*assembly code to move the value of 'fd' into register %0*/
 	asm ("mov %1, %0\n\t"
 		"add $3, %0"
 		: "=r" (fd)
 		: "r" (fd));
-
-	if (ac == 2)
+	if (argc == 2)
 	{
-		fd = open(av[1], O_RDONLY);
+		fd = open(argv[1], O_RDONLY);
+		/*couldn't open file*/
 		if (fd == -1)
 		{
-			if (errno == EACCES)
+			if (errno == EACCES) /*error bc of insufficient permissions*/
 				exit(126);
-			if (errno == ENOENT)
+			if (errno == ENOENT) /*error: file not found*/
 			{
-				_eputs(av[0]);
+				/*assemble output*/
+				_eputs(argv[0]);
 				_eputs(": 0: Can't open ");
-				_eputs(av[1]);
+				_eputs(argv[1]);
 				_eputchar('\n');
 				_eputchar(FLUSH);
-				exit(127);
+				exit(127); /*Exit with status 127*/
 			}
 			return (EXIT_FAILURE);
 		}
@@ -39,7 +41,9 @@ int main(int ac, char **av)
 	}
 	populate_env_list(inf);
 	read_history(inf);
-	hsh(inf, av);
+	loop(inf, argv);
+
+	/*success*/
 	return (EXIT_SUCCESS);
 }
 

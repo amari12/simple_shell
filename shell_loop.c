@@ -7,7 +7,8 @@
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int hsh(inf_t *inf, char **av)
+
+int loop(inf_t *inf, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
