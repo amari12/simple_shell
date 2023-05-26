@@ -101,7 +101,7 @@ void split_input(char *input, char *args[])
 	if (list_tokens == NULL)
 	{
 		perror("Failed to allocate memory");
-		/*free(list_tokens);i*/
+		free(list_tokens);
 		return;
 	}
 	/*make copy of input string*/
@@ -146,12 +146,14 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 		if (pipe(pipefd) == -1)
 		{
 			perror("pipe");
+			free(path);
 			return (1);
 		}
 		fork_result = fork(); /*gives a pid*/
 		if (fork_result == -1) /*error*/
 		{
 			perror("Fork failed");
+			free(path);
 			return (1);
 		}
 		else if (fork_result == 0) /*success -> child process*/
@@ -162,6 +164,7 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 				perror("dup2");
 				exit(EXIT_FAILURE);
 			}
+			/*close(pipefd[0]);*/
 			status = execve(path, args, environ); /*exe cmd*/
 			if (status == -1)
 			{
@@ -176,6 +179,7 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 			if (stdout_fd == -1)
 			{
 				perror("open");
+				free(path);
 				return (1);
 			}
 			stdout_file = fdopen(stdout_fd, "w");
@@ -183,6 +187,7 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 			{
 				perror("fdopen");
 				close(stdout_fd);
+				free(path);
 				return (1);
 			}
 			while ((bytesrd = read(pipefd[0], buffer, sizeof(buffer))) > 0)
@@ -190,13 +195,15 @@ int forking(char *args[], char *cmd __attribute__((unused)))
 				write(STDOUT_FILENO, buffer, bytesrd);
 				fwrite(buffer, 1, bytesrd, stdout_file);
 			}
+			/*close(pipefd[0]);*/
+			/*close(pipefd[1]);*/
 			fclose(stdout_file);
-			close(pipefd[0]);
 			do
 			{
 				if (waitpid(fork_result, &status, WUNTRACED) == -1)
 				{
 					perror("waitpid");
+					free(path);
 					return (1);
 				}
 			} while (!WIFEXITED(status) && !WIFSIGNALED(status));

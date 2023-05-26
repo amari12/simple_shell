@@ -5,14 +5,11 @@
 #include <string.h>
 
 /**
- * main - main funtion / entry poin
- * @argc: nr of arguments
- * @argv: arguments
+ * main - main function / entry point
  * Return: int
  */
 
-int main(int argc __attribute__((unused)),
-		char *argv[] __attribute__((unused)))
+int main(void)
 {
 	char *input;
 	char *cmd;

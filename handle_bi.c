@@ -80,7 +80,7 @@ void change_dir(char *args[])
 	result = chdir(change); /*change directory*/
 	if (result != 0)
 	{
-		/*perror("cd failed");*/
+		perror("chdir failed");
 	/*	fprintf(stderr, "%s: cd failed\n", prog_name);*/
 		return;
 	}
@@ -88,8 +88,8 @@ void change_dir(char *args[])
 	get_result = getcwd(current, sizeof(current));
 	if (get_result != NULL)
 		setenv("PWD", current, 1);
-	/*else*/
-	/*	fprintf(stderr, "%s: Failed to update current directory\n", prog_name);*/
+	else
+		fprintf(stderr, "Failed to update current directory\n");
 	/*perror("Failed to update current directory");*/
 	/*printf("current dir: %s\n", current);*/
 }
@@ -105,6 +105,8 @@ void check_comments(char *input)
 	size_t i;
 	int found = -1;
 
+	if (input == NULL)
+		return;
 	for (i = 0; i < strlen(input); i++)
 	{ /*look for comment #*/
 		if (input[i] == '#')
