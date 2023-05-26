@@ -119,38 +119,33 @@ int replace_vars(inf_t *inf)
 {
 	int i = 0;
 	list_t *node;
-	char *s;
 
-	/*go through arguments*/
 	for (i = 0; inf->argv[i]; i++)
 	{
-		/*start with $*/
 		if (inf->argv[i][0] != '$' || !inf->argv[i][1])
 			continue;
-		/*only $*/
-		if (!strcmp(inf->argv[i], "$?"))
+
+		if (!_strcmp(inf->argv[i], "$?"))
 		{
-			s = strdup(convert_number(inf->status, 10, 0));
-			replace_string(&(inf->argv[i]), s);
+			replace_string(&(inf->argv[i]),
+					_strdup(convert_number(inf->status, 10, 0)));
 			continue;
 		}
-		/*$$*/
-		if (!strcmp(inf->argv[i], "$$"))
-		{ /*Replace the argument with the string rep of current pID*/
-			s = strdup(convert_number(getpid(), 10, 0));
-			replace_string(&(inf->argv[i]), s);
+		if (!_strcmp(inf->argv[i], "$$"))
+		{
+			replace_string(&(inf->argv[i]),
+					_strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
-		/*find node*/
 		node = node_starts_with(inf->env, &inf->argv[i][1], '=');
-		if (node != NULL)
-		{ /*replace the argument with the value of the env variable*/
-			s = strdup(strchr(node->str, '=') + 1);
-			replace_string(&(inf->argv[i]), s);
+		if (node)
+		{
+			replace_string(&(inf->argv[i]),
+					_strdup(_strchr(node->str, '=') + 1));
 			continue;
 		}
-		s = strdup("");
-		replace_string(&inf->argv[i], s);
+		replace_string(&inf->argv[i], _strdup(""));
+
 	}
 	return (0);
 }
