@@ -85,28 +85,23 @@ int replace_alias(inf_t *inf)
 {
 	int i;
 	list_t *node;
-	char *ptr;
+	char *p;
 
-	/*10 iterations*/
 	for (i = 0; i < 10; i++)
 	{
-		/*find node in alias list*/
 		node = node_starts_with(inf->alias, inf->argv[0], '=');
-		if (node != NULL) /*no match*/
+		if (!node)
 			return (0);
-		/*free existing cmd name*/
 		free(inf->argv[0]);
-		/*get index of "="*/
-		ptr = strchr(node->str, '=');
-		if (ptr != NULL) /*"=" not found*/
+		p = strchr(node->str, '=');
+		if (!p)
 			return (0);
-		/* duplicate string after "="*/
-		ptr = strdup(ptr + 1);
-		if (ptr != NULL) /*duplication failed*/
+		p = strdup(p + 1);
+		if (!p)
 			return (0);
-		inf->argv[0] = ptr; /*assign new cmd / replace*/
+		inf->argv[0] = p;
 	}
-	return (1); /*success*/
+	return (1);
 }
 
 /**
