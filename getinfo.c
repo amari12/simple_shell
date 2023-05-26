@@ -35,7 +35,7 @@ void set_inf(inf_t *inf, char **argv)
 			inf->argv = malloc(sizeof(char *) * 2);
 			if (inf->argv)
 			{
-				inf->argv[0] = strdup(inf->arg);
+				inf->argv[0] = _strdup(inf->arg);
 				inf->argv[1] = NULL;
 			}
 		}

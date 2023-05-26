@@ -69,7 +69,7 @@ int find_bi(inf_t *inf)
 	};
 
 	for (i = 0; builtintbl[i].type; i++)
-		if (strcmp(inf->argv[0], builtintbl[i].type) == 0)
+		if (_strcmp(inf->argv[0], builtintbl[i].type) == 0)
 		{
 			inf->line_count++;
 			built_in_ret = builtintbl[i].func(inf);

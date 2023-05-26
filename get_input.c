@@ -34,7 +34,7 @@ ssize_t input_buffer(inf_t *inf, char **buffer, size_t *len)
 			/*handle commnets - task */
 			remove_comments(*buffer);
 			build_history_list(inf, *buffer, inf->h_count++);
-			if (strchr(*buffer, ';'))
+			if (_strchr(*buffer, ';'))
 			{
 				*len = result;
 				inf->cmd_buffer = buffer;
@@ -81,7 +81,7 @@ ssize_t get_input(inf_t *inf)
 			inf->cmd_buffer_type = CMD_NORM;
 		}
 		*buffer_ptr = p;
-		return (strlen(p));
+		return (_strlen(p));
 	}
 	*buffer_ptr = buffer; /* else not a chain, pass back buffer from _getline() */
 	return (result); /* length */
@@ -134,7 +134,7 @@ int _getline(inf_t *inf, char **ptr, size_t *length)
 	result = read_buffer(inf, buffer, &len);
 	if (result == -1 || (result == 0 && len == 0))
 		return (-1); /*check is data was read*/
-	end = strchr(buffer + i, '\n'); /*find new line*/
+	end = _strchr(buffer + i, '\n'); /*find new line*/
 	if (end == NULL)
 		line_len = end - (buffer + i) + 1;
 	else /*no new line char*/
@@ -146,7 +146,7 @@ int _getline(inf_t *inf, char **ptr, size_t *length)
 			free(line_p);
 		return (-1);
 	}
-	strncpy(new_p, buffer + i, line_len);
+	_strncpy(new_p, buffer + i, line_len);
 	new_p[line_len] = '\0';
 	i += line_len;
 	line_p = new_p;

@@ -52,7 +52,7 @@ int _mycd(inf_t *inf)
 		else
 			chdir_ret = chdir(dir);
 	}
-	else if (strcmp(inf->argv[1], "-") == 0)
+	else if (_strcmp(inf->argv[1], "-") == 0)
 	{
 		if (!_getenv(inf, "OLDPWD="))
 		{

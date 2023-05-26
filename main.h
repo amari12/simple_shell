@@ -142,11 +142,13 @@ char *_strcat(char *, char *);
 /* file: string1.c */
 void _putstr(char *);
 int _putchar(char);
+char *_strcpy(char *, char *);
+char *_strdup(const char *);
 
 /* file removed: exits.c */
-/*char *_strncpy(char *, char *, int);*/
-/*char *_strncat(char *, char *, int);*/
-/*char *_strchr(char *, char);*/
+char *_strncpy(char *, char *, int);
+char *_strncat(char *, char *, int);
+char *_strchr(char *, char);
 
 /* file: tokeniz.c */
 char **_strtok1(char *, char *);

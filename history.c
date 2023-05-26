@@ -64,14 +64,14 @@ char *get_history_file(inf_t *inf)
 	dir = _getenv(inf, "HOME=");
 	if (dir == NULL)
 		return (NULL);
-	len = strlen(dir);
-	len2 = strlen(HIST_FILE);
+	len = _strlen(dir);
+	len2 = _strlen(HIST_FILE);
 	buffer = malloc(sizeof(char) * (len + len2 + 2));
 	if (buffer == NULL)
 		return (NULL);
-	strcpy(buffer, dir);
+	_strcpy(buffer, dir);
 	buffer[len] = '/';
-	strcpy(buffer + len + 1, HIST_FILE);
+	_strcpy(buffer + len + 1, HIST_FILE);
 	return (buffer);
 }
 
