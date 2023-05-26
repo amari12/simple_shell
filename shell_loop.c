@@ -2,60 +2,61 @@
 
 /**
  * hsh - main shell loop
- * @inf: the parameter & return inf struct
- * @av: the argument vector from main()
- *
+ * @inf: info struct
+ * @argv: the arguments
  * Return: 0 on success, 1 on error, or error code
  */
-int hsh(inf_t *inf, char **av)
-{
-	ssize_t r = 0;
-	int builtin_ret = 0;
 
-	while (r != -1 && builtin_ret != -2)
-	{
+int loop(inf_t *inf, char **argv)
+{
+	ssize_t status = 0;
+	int ibuiltin = 0;
+
+	while (status != -1 && ibuiltin != -2)
+	{ /*repeat loop / prompt */
 		clear_inf(inf);
-		if (interactive(inf))
-			_puts("$ ");
-		_eputchar(BUF_FLUSH);
-		r = get_input(inf);
-		if (r != -1)
+		/*check is interactive mode*/
+		if (is_interactive(inf))
+			_putstr("our shell>> ");
+		_eputchar(FLUSH); /*flush stdout*/
+		status = get_input(inf);
+		if (status != -1)
 		{
-			set_inf(inf, av);
-			builtin_ret = find_builtin(inf);
-			if (builtin_ret == -1)
+			set_inf(inf, argv);
+			ibuiltin = find_bi(inf);
+			if (ibuiltin == -1)
 				find_cmd(inf);
 		}
-		else if (interactive(inf))
+		else if (is_interactive(inf))
 			_putchar('\n');
 		free_inf(inf, 0);
 	}
 	write_history(inf);
 	free_inf(inf, 1);
-	if (!interactive(inf) && inf->status)
+	if (!is_interactive(inf) && inf->status)
 		exit(inf->status);
-	if (builtin_ret == -2)
+	if (ibuiltin == -2)
 	{
 		if (inf->err_num == -1)
 			exit(inf->status);
 		exit(inf->err_num);
 	}
-	return (builtin_ret);
+	return (ibuiltin);
 }
 
 /**
- * find_builtin - finds a builtin command
+ * find_bi - finds a builtin command
  * @inf: the parameter & return inf struct
- *
- * Return: -1 if builtin not found,
- *			0 if builtin executed successfully,
- *			1 if builtin found but not successful,
- *			-2 if builtin signals exit()
+ * Return: int  -1 bi not found,
+ *		0 bi executed successfully,
+ *		1 bi found but not successful,
+ *		-2 bi signals exit()
  */
-int find_builtin(inf_t *inf)
+
+int find_bi(inf_t *inf)
 {
-	int i, built_in_ret = -1;
-	builtin_table builtintbl[] = {
+	int i, result = -1;
+	builtin_table bi_table[] = {
 		{"exit", _myexit},
 		{"env", _myenv},
 		{"help", _myhelp},
@@ -67,14 +68,15 @@ int find_builtin(inf_t *inf)
 		{NULL, NULL}
 	};
 
-	for (i = 0; builtintbl[i].type; i++)
-		if (_strcmp(inf->argv[0], builtintbl[i].type) == 0)
+	/*look through bi's and compare cmd*/
+	for (i = 0; bi_table[i].type; i++)
+		if (strcmp(inf->argv[0], bi_table[i].type) == 0)
 		{
 			inf->line_count++;
-			built_in_ret = builtintbl[i].func(inf);
+			result = bi_table[i].func(inf);
 			break;
 		}
-	return (built_in_ret);
+	return (result);
 }
 
 /**
@@ -108,7 +110,7 @@ void find_cmd(inf_t *inf)
 	}
 	else
 	{
-		if ((interactive(inf) || _getenv(inf, "PATH=")
+		if ((is_interactive(inf) || _getenv(inf, "PATH=")
 					|| inf->argv[0][0] == '/') && is_cmd(inf, inf->argv[0]))
 			fork_cmd(inf);
 		else if (*(inf->arg) != '\n')

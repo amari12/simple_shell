@@ -1,9 +1,11 @@
 #include "main.h"
 
 /**
- * clear_inf - initializes inf_t struct
- * @inf: struct address
+ * clear_inf - reset inf_t struct
+ * @inf: struct ptr
+ * Return: void
  */
+
 void clear_inf(inf_t *inf)
 {
 	inf->arg = NULL;
@@ -14,32 +16,38 @@ void clear_inf(inf_t *inf)
 
 /**
  * set_inf - initializes inf_t struct
- * @inf: struct address
- * @av: argument vector
+ * @inf: struct ptr
+ * @argv: argumens
+ * Return: void
  */
-void set_inf(inf_t *inf, char **av)
+
+void set_inf(inf_t *inf, char **argv)
 {
 	int i = 0;
 
-	inf->fname = av[0];
+	inf->fname = argv[0];
+	/*check for additional args*/
 	if (inf->arg)
 	{
-		inf->argv = strtow(inf->arg, " \t");
-		if (!inf->argv)
+		/*split input*/
+		inf->argv = _strtok1(inf->arg, " \t");
+		if (!inf->argv) /*tokenisation failed*/
 		{
-
+			/*memory allocation*/
 			inf->argv = malloc(sizeof(char *) * 2);
 			if (inf->argv)
-			{
-				inf->argv[0] = _strdup(inf->arg);
+			{ /*assign arguments*/
+				inf->argv[0] = strdup(inf->arg);
 				inf->argv[1] = NULL;
 			}
 		}
+		/*count args*/
 		for (i = 0; inf->argv && inf->argv[i]; i++)
 			;
-		inf->argc = i;
-
+		inf->argc = i; /*count*/
+		/*Replace aliases with their corresponding values*/
 		replace_alias(inf);
+		/*Replace aliases with their corresponding values*/
 		replace_vars(inf);
 	}
 }
@@ -56,7 +64,7 @@ void free_inf(inf_t *inf, int all)
 	inf->path = NULL;
 	if (all)
 	{
-		if (!inf->cmd_buf)
+		if (!inf->cmd_buffer)
 			free(inf->arg);
 		if (inf->env)
 			free_list(&(inf->env));
@@ -66,10 +74,10 @@ void free_inf(inf_t *inf, int all)
 			free_list(&(inf->alias));
 		ffree(inf->environ);
 		inf->environ = NULL;
-		bfree((void **)inf->cmd_buf);
+		bfree((void **)inf->cmd_buffer);
 		if (inf->readfd > 2)
 			close(inf->readfd);
-		_putchar(BUF_FLUSH);
+		_putchar(FLUSH);
 	}
 }
 

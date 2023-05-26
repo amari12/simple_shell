@@ -25,7 +25,7 @@ int unset_alias(inf_t *inf, char *str)
 	char *p, c;
 	int ret;
 
-	p = _strchr(str, '=');
+	p = strchr(str, '=');
 	if (!p)
 		return (1);
 	c = *p;
@@ -47,7 +47,7 @@ int set_alias(inf_t *inf, char *str)
 {
 	char *p;
 
-	p = _strchr(str, '=');
+	p = strchr(str, '=');
 	if (!p)
 		return (1);
 	if (!*++p)
@@ -69,12 +69,12 @@ int print_alias(list_t *node)
 
 	if (node)
 	{
-		p = _strchr(node->str, '=');
+		p = strchr(node->str, '=');
 		for (a = node->str; a <= p; a++)
 			_putchar(*a);
 		_putchar('\'');
-		_puts(p + 1);
-		_puts("'\n");
+		_putstr(p + 1);
+		_putstr("'\n");
 		return (0);
 	}
 	return (1);
@@ -104,7 +104,7 @@ int _myalias(inf_t *inf)
 	}
 	for (i = 1; inf->argv[i]; i++)
 	{
-		p = _strchr(inf->argv[i], '=');
+		p = strchr(inf->argv[i], '=');
 		if (p)
 			set_alias(inf, inf->argv[i]);
 		else

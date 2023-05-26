@@ -1,27 +1,30 @@
 #include "main.h"
 
 /**
- * interactive - returns true if shell is interactive mode
- * @inf: struct address
- *
- * Return: 1 if interactive mode, 0 otherwise
+ * is_interactive - checks if shell is interactive mode
+ * @inf: struct
+ * Return: 1 = interactive mode, 0 other
  */
-int interactive(inf_t *inf)
+
+int is_interactive(inf_t *inf)
 {
 	return (isatty(STDIN_FILENO) && inf->readfd <= 2);
 }
 
 /**
- * is_delim - checks if character is a delimeter
- * @c: the char to check
- * @delim: the delimeter string
- * Return: 1 if true, 0 if false
+ * is_delim - checks if char is a valid delimeter
+ * @c: char
+ * @delim: delimeter string
+ * Return: int (1 true, 0 false)
  */
-int is_delim(char c, char *delim)
+
+int is_delim(char c, char *d)
 {
-	while (*delim)
-		if (*delim++ == c)
-			return (1);
+	/*look through delim str*/
+	while (*d)
+		if (*d++ == c)
+			return (1); /*found*/
+	/*did not find = 0*/
 	return (0);
 }
 

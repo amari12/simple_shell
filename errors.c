@@ -20,25 +20,27 @@ void _eputs(char *str)
 }
 
 /**
- * _eputchar - writes the character c to stderr
- * @c: The character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
+ * _eputchar - writes the character to stderr
+ * @c: char
+ * Return: int (1 success, -1 fail)
  */
+
 int _eputchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buffer[WRITE_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	/*If the character is FLUSH or the buffer is full*/
+	if (c == FLUSH || i >= WRITE_SIZE)
 	{
-		write(2, buf, i);
+		/*Write the buffer contents to the */
+		/*standard error stream (file descriptor 2)*/
+		write(2, buffer, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
-		buf[i++] = c;
-	return (1);
+	if (c !=  FLUSH)
+		buffer[i++] = c;
+	return (1); /*success*/
 }
 
 /**
@@ -52,14 +54,14 @@ int _eputchar(char c)
 int _putfd(char c, int fd)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WRITE_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c ==  FLUSH || i >= WRITE_SIZE)
 	{
 		write(fd, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c !=  FLUSH)
 		buf[i++] = c;
 	return (1);
 }

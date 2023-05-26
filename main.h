@@ -13,9 +13,9 @@
 #include <errno.h>
 
 /* read/write buffers */
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
-#define BUF_FLUSH -1
+#define READ_SIZE 1024
+#define WRITE_SIZE 1024
+#define FLUSH -1
 
 /* command chaining */
 #define CMD_NORM	0
@@ -67,8 +67,8 @@ typedef struct liststr
  * @alias: the alias node
  * @env_changed: on if environ was changed
  * @status: the return status of the last exec'd command
- * @cmd_buf: address of pointer to cmd_buf, on if chaining
- * @cmd_buf_type: CMD_type ||, &&, ;
+ * @cmd_buffer: address of pointer to cmd_buffer, on if chaining
+ * @cmd_buffer_type: CMD_type ||, &&, ;
  * @readfd: the fd from which to read line input
  * @h_count: the history line number count
  */
@@ -90,8 +90,8 @@ typedef struct passinf
 	int env_changed;
 	int status;
 
-	char **cmd_buf; /* pointer to cmd, chain buffer, -> memory mangement */
-	int cmd_buf_type; /* CMD_type (command type) ||, &&, ; */
+	char **cmd_buffer; /* pointer to cmd, chain buffer, -> memory mangement */
+	int cmd_buffer_type; /* CMD_type (command type) ||, &&, ; */
 	int readfd;
 	int h_count;
 } inf_t;
@@ -114,8 +114,8 @@ typedef struct builtin
 
 
 /* file: shell_loop.c */
-int hsh(inf_t *, char **);
-int find_builtin(inf_t *);
+int loop(inf_t *, char **);
+int find_bi(inf_t *);
 void find_cmd(inf_t *);
 void fork_cmd(inf_t *);
 
@@ -124,7 +124,7 @@ int is_cmd(inf_t *, char *);
 char *dup_chars(char *, int, int);
 char *find_path(inf_t *, char *, char *);
 
-/* file: ??????.c */
+/* file: loophsh.c ??? */
 int loophsh(char **);
 
 /* file: errors.c */
@@ -140,19 +140,17 @@ char *starts_with(const char *, const char *);
 char *_strcat(char *, char *);
 
 /* file: string1.c */
-char *_strcpy(char *, char *);
-char *_strdup(const char *);
-void _puts(char *);
+void _putstr(char *);
 int _putchar(char);
 
-/* file: exits.c */
-char *_strncpy(char *, char *, int);
-char *_strncat(char *, char *, int);
-char *_strchr(char *, char);
+/* file removed: exits.c */
+/*char *_strncpy(char *, char *, int);*/
+/*char *_strncat(char *, char *, int);*/
+/*char *_strchr(char *, char);*/
 
 /* file: tokeniz.c */
-char **strtow(char *, char *);
-char **strtow2(char *, char);
+char **_strtok1(char *, char *);
+char **_strtok2(char *, char);
 
 /* file: realloc.c */
 char *_memset(char *, char, unsigned int);
@@ -163,7 +161,7 @@ void *_realloc(void *, unsigned int, unsigned int);
 int bfree(void **);
 
 /* file: _atoi.c */
-int interactive(inf_t *);
+int is_interactive(inf_t *);
 int is_delim(char, char *);
 int _isalpha(int);
 int _atoi(char *);
@@ -184,7 +182,7 @@ int _myhelp(inf_t *);
 int _myhistory(inf_t *);
 int _myalias(inf_t *);
 
-/* file: getline.c */
+/* file: get_line.c */
 ssize_t get_input(inf_t *);
 int _getline(inf_t *, char **, size_t *);
 void sigintHandler(int);
@@ -210,7 +208,7 @@ int _setenv(inf_t *, char *, char *);
 char *get_history_file(inf_t *inf);
 int write_history(inf_t *inf);
 int read_history(inf_t *inf);
-int build_history_list(inf_t *inf, char *buf, int linecount);
+int build_history_list(inf_t *inf, char *buffer, int linecount);
 int renumber_history(inf_t *inf);
 
 /* file: lists.c */

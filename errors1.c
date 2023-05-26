@@ -12,7 +12,7 @@ int _erratoi(char *s)
 	unsigned long int result = 0;
 
 	if (*s == '+')
-		s++;  /* TODO: why does this make main return 255? */
+		s++;
 	for (i = 0;  s[i] != '\0'; i++)
 	{
 		if (s[i] >= '0' && s[i] <= '9')
@@ -89,53 +89,66 @@ int print_d(int input, int fd)
  * convert_number - converter function, a clone of itoa
  * @num: number
  * @base: base
- * @flags: argument flags
- *
- * Return: string
+ * @flags: arg flags
+ * Return: string converted
  */
+
 char *convert_number(long int num, int base, int flags)
 {
-	static char *array;
 	static char buffer[50];
-	char sign = 0;
-	char *ptr;
-	unsigned long n = num;
+	char *ptr = &buffer[49];
+	char arr[] = "0123456789ABCDEF";
+	int isNegative = 0, i;
 
-	if (!(flags & CONVERT_UNSIGNED) && num < 0)
-	{
-		n = -num;
-		sign = '-';
-
+	if (num == 0)
+	{ /*check for zero*/
+		*--ptr = '0';
+		return (ptr);
 	}
-	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
-	ptr = &buffer[49];
-	*ptr = '\0';
-
-	do	{
-		*--ptr = array[n % base];
-		n /= base;
-	} while (n != 0);
-
-	if (sign)
-		*--ptr = sign;
+	if (!(flags & CONVERT_UNSIGNED) && num < 0)
+	{ /*check for negative*/
+		isNegative = 1;
+		num = -num;
+	}
+	if (flags & CONVERT_LOWERCASE)
+	{ /*convert to lowercase*/
+		for (i = 0; i < 49; i++)
+		{
+			arr[i] += 32;
+		}
+	}
+	while (num != 0)
+	{ /*convert*/
+		*--ptr = arr[num % base];
+		num /= base;
+	}
+	/*change sign*/
+	if (isNegative == 1)
+		*--ptr = '-';
 	return (ptr);
 }
 
 /**
- * remove_comments - function replaces first instance of '#' with '\0'
- * @buf: address of the string to modify
- *
- * Return: Always 0;
+ * remove_comments - replaces first instance of '#' with '\0'
+ * @buffer: string
+ * Return: void
  */
-void remove_comments(char *buf)
+
+void remove_comments(char *buffer)
 {
 	int i;
 
-	for (i = 0; buf[i] != '\0'; i++)
-		if (buf[i] == '#' && (!i || buf[i - 1] == ' '))
+	/*loop through and look for comment*/
+	for (i = 0; buffer[i] != '\0'; i++)
+	{
+		if (buffer[i] == '#')
 		{
-			buf[i] = '\0';
-			break;
+			if (!i || buffer[i - 1] == ' ')
+			{ /*!i check if index is zero*/
+				buffer[i] = '\0';
+				break;
+			}
 		}
+	}
 }
 
