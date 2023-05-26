@@ -96,26 +96,28 @@ void find_cmd(inf_t *inf)
 		inf->line_count++;
 		inf->linecount_flag = 0;
 	}
+	/*count non delim chars*/
 	for (i = 0, j = 0; inf->arg[i]; i++)
 		if (!is_delim(inf->arg[i], " \t\n"))
 			j++;
-	if (!j)
+	if (!j) /*no non-delim chars*/
 		return;
+	/*look for path*/
 	path = find_path(inf, _getenv(inf, "PATH="), inf->argv[0]);
 	if (path != NULL)
-	{
+	{ /*valid path found*/
 		inf->path = path;
-		fork_cmd(inf);
+		fork_cmd(inf); /*forking*/
 	}
 	else
-	{
+	{ /*path not found but cmd meets conditions*/
 		if ((is_interactive(inf) || _getenv(inf, "PATH=")
-					|| inf->argv[0][0] == '/') && is_cmd(inf, inf->argv[0]))
-			fork_cmd(inf);
+			|| inf->argv[0][0] == '/') && is_cmd(inf, inf->argv[0]))
+			fork_cmd(inf); /*forking*/
 		else if (*(inf->arg) != '\n')
-		{
-			inf->status = 127;
-			print_error(inf, "not found\n");
+		{ /*cmd not found and arg not new line*/
+			inf->status = 127; /*stderr*/
+			print_error(inf, "not found\n"); /*error msg*/
 		}
 	}
 }

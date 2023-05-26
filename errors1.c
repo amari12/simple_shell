@@ -95,36 +95,29 @@ int print_d(int input, int fd)
 
 char *convert_number(long int num, int base, int flags)
 {
+	static char *array;
 	static char buffer[50];
-	char *ptr = &buffer[49];
-	char arr[] = "0123456789ABCDEF";
-	int isNegative = 0, i;
+	char sign = 0;
+	char *ptr;
+	unsigned long n = num;
 
-	if (num == 0)
-	{ /*check for zero*/
-		*--ptr = '0';
-		return (ptr);
-	}
 	if (!(flags & CONVERT_UNSIGNED) && num < 0)
-	{ /*check for negative*/
-		isNegative = 1;
-		num = -num;
+	{
+		n = -num;
+		sign = '-';
+
 	}
-	if (flags & CONVERT_LOWERCASE)
-	{ /*convert to lowercase*/
-		for (i = 0; i < 49; i++)
-		{
-			arr[i] += 32;
-		}
-	}
-	while (num != 0)
-	{ /*convert*/
-		*--ptr = arr[num % base];
-		num /= base;
-	}
-	/*change sign*/
-	if (isNegative == 1)
-		*--ptr = '-';
+	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	ptr = &buffer[49];
+	*ptr = '\0';
+
+	do	{
+		*--ptr = array[n % base];
+		n /= base;
+	} while (n != 0);
+
+	if (sign)
+		*--ptr = sign;
 	return (ptr);
 }
 
