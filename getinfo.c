@@ -31,7 +31,7 @@ void set_inf(inf_t *inf, char **argv)
 	if (inf->arg)
 	{
 		/*split input*/
-		inf->argv = strtow(inf->arg, " \t");
+		inf->argv = _strtok(inf->arg, " \t");
 		if (!inf->argv) /*tokenisation failed*/
 		{
 			/*memory allocation*/

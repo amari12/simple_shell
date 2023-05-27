@@ -144,8 +144,7 @@ int _putchar(char);
 /*char *_strchr(char *, char);*/
 
 /* file: tokeniz.c */
-char **strtow(char *, char *);
-char **strtow2(char *, char);
+char **_strtok(char *, char *);
 
 /* file: realloc.c */
 char *_memset(char *, char, unsigned int);

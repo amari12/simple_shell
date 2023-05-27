@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- *_puts - prints an input string
+ *_putstr - prints an input string
  * @str: string
  * Return: void
  */
