@@ -36,7 +36,6 @@
 
 extern char **environ;
 
-
 /**
  * struct liststr - singly linked list
  * @num: the number field
@@ -72,6 +71,7 @@ typedef struct liststr
  *@readfd: the fd from which to read line input
  *@histcount: the history line number count
  */
+
 typedef struct passinfo
 {
 	char *arg;
@@ -123,9 +123,7 @@ int is_cmd(inf_t *, char *);
 char *dup_chars(char *, int, int);
 char *find_path(inf_t *, char *, char *);
 
-int loophsh(char **);
-
-/* file: errors.c */
+/* file: writing.c */
 void _eputs(char *);
 int _eputchar(char);
 int _putfd(char c, int fd);
@@ -133,25 +131,16 @@ int _putsfd(char *str, int fd);
 
 /* file: string.c */
 char *starts_with(const char *, const char *);
-
-/* file: string1.c */
 void _putstr(char *);
 int _putchar(char);
-
-/* file removed: exits.c */
-/*char *_strncpy(char *, char *, int);*/
-/*char *_strncat(char *, char *, int);*/
-/*char *_strchr(char *, char);*/
 
 /* file: tokeniz.c */
 char **_strtok(char *, char *);
 
-/* file: realloc.c */
+/* file: memory.c */
 char *_memset(char *, char, unsigned int);
 void ffree(char **);
 void *_realloc(void *, unsigned int, unsigned int);
-
-/* file: memory.c */
 int bfree(void **);
 
 /* file: _atoi.c */
@@ -167,21 +156,22 @@ int print_d(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
 
-/* file: builtin.c */
+/* file: bi.c & bi2.c */
 int _myexit(inf_t *);
 int _mycd(inf_t *);
 int _myhelp(inf_t *);
-
-/* file: builtin1.c */
 int _myhistory(inf_t *);
 int _myalias(inf_t *);
+int unset_alias(inf_t *inf, char *str);
+int set_alias(inf_t *inf, char *str);
+int print_alias(list_t *node);
 
-/* file: get_line.c */
+/* file: get_input.c */
 ssize_t get_input(inf_t *);
 int _getline(inf_t *, char **, size_t *);
 void sigintHandler(int);
 
-/* file: getinf.c */
+/* file: get_inf.c */
 void clear_inf(inf_t *);
 void set_inf(inf_t *, char **);
 void free_inf(inf_t *, int);
@@ -193,7 +183,7 @@ int _mysetenv(inf_t *);
 int _myunsetenv(inf_t *);
 int populate_env_list(inf_t *);
 
-/* file: getenv.c */
+/* file: get_env.c */
 char **get_environ(inf_t *);
 int _unsetenv(inf_t *, char *);
 int _setenv(inf_t *, char *, char *);
@@ -219,7 +209,7 @@ size_t print_list(const list_t *);
 list_t *node_starts_with(list_t *, char *, char);
 ssize_t get_node_index(list_t *, list_t *);
 
-/* file: vars.c */
+/* file: chain_replace.c */
 int is_chain(inf_t *, char *, size_t *);
 void check_chain(inf_t *, char *, size_t *, size_t, size_t);
 int replace_alias(inf_t *);
