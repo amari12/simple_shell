@@ -17,7 +17,7 @@ int loop(inf_t *inf, char **argv)
 		clear_inf(inf);
 		/*prompt*/
 		if (is_interactive(inf))
-			_puts("$ ");
+			_putstr("$ ");
 		_eputchar(FLUSH);
 
 		r = get_input(inf); /*get user input*/

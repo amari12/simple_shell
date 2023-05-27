@@ -109,8 +109,8 @@ size_t print_list_str(const list_t *h)
 	while (h)
 	{
 		/*process*/
-		_puts(h->str ? h->str : "(nil)");
-		_puts("\n");
+		_putstr(h->str ? h->str : "(nil)");
+		_putstr("\n");
 		/*set up next node/loop*/
 		h = h->next;
 		i++;

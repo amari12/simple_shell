@@ -135,7 +135,7 @@ int _putsfd(char *str, int fd);
 char *starts_with(const char *, const char *);
 
 /* file: string1.c */
-void _puts(char *);
+void _putstr(char *);
 int _putchar(char);
 
 /* file removed: exits.c */

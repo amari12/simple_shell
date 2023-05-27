@@ -50,7 +50,7 @@ int _mycd(inf_t *inf)
 
 	s = getcwd(buffer, 1024); /*Get current working directory*/
 	if (!s) /*failed*/
-		_puts("TODO: >>getcwd failure emsg here<<\n");
+		_putstr("TODO: >>getcwd failure emsg here<<\n");
 
 	if (!inf->argv[1])
 	{
@@ -64,11 +64,11 @@ int _mycd(inf_t *inf)
 	{
 		if (!_getenv(inf, "OLDPWD="))
 		{
-			_puts(s);
+			_putstr(s);
 			_putchar('\n');
 			return (1);
 		} /*Print the value of "OLDPWD" and change to the directory*/
-		_puts(_getenv(inf, "OLDPWD=")), _putchar('\n');
+		_putstr(_getenv(inf, "OLDPWD=")), _putchar('\n');
 		chdir_result = chdir((dir = _getenv(inf, "OLDPWD=")) ? dir : "/");
 	}
 	else /*Change to the directory specified by the argument*/
@@ -101,10 +101,10 @@ int _myhelp(inf_t *inf)
 	arg_array = inf->argv;
 
 	/*Print a message*/
-	_puts("help call works. Function not yet implemented \n");
+	_putstr("help call works. Function not yet implemented \n");
 
 	if (0)
-		_puts(*arg_array);
+		_putstr(*arg_array);
 
 	/*out*/
 	return (0);

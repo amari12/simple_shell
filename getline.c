@@ -179,8 +179,8 @@ int _getline(inf_t *inf, char **ptr, size_t *length)
 void sigintHandler(__attribute__((unused))int sig_num)
 {
 	/*new line*/
-	_puts("\n");
-	_puts("$ ");
+	_putstr("\n");
+	_putstr("$ ");
 
 	/*fluch stdout*/
 	_putchar(FLUSH);

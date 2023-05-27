@@ -71,12 +71,12 @@ size_t print_list(const list_t *h)
 	/*loop through nodes*/
 	while (h)
 	{
-		_puts(convert_number(h->num, 10, 0));
+		_putstr(convert_number(h->num, 10, 0));
 		/*build output*/
 		_putchar(':');
 		_putchar(' ');
-		_puts(h->str ? h->str : "(nil)");
-		_puts("\n");
+		_putstr(h->str ? h->str : "(nil)");
+		_putstr("\n");
 		/*next node*/
 		h = h->next;
 		i++;
